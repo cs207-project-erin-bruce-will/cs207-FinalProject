@@ -44,14 +44,12 @@ include in your document along with some prompts that you may want to address.
 
 
 ### Introduction
-TODO:Erin
-Describe problem the software solves and why it's important to solve that problem
+Automatic differentiation is a set of techniques that allows a computer program to numerically evaluate the derivative of a function. Automatic differentiation is a powerful tool that does not depend on the dimensionality of the predictor variable, and does not suffer from rount off errors. When working with large sets of data, manual calculation is unrealistic, and numeric differentiation requires a large volume of complicated code.
+
+Dual numbers are an extension of a real number into two-dimesional space using two real numbers and a vector, epsilon. Dual numbers are useful for geometrical treatments, especially when considering analytical methods in kinematics and dynamics of spatial mechanisms. The application of dual numbers in science and engineering research is fairly common, and there is a need for an application that can differentiate them quickly and easily.
 
 ### Background
-TODO:Erin
-Describe (briefly) the mathematical background and concepts as you see fit.  You **do not** need to
-give a treatise on automatic differentation or dual numbers.  Just give the essential ideas (e.g.
-the chain rule, the graph structure of calculations, elementary functions, etc).
+Automatic differentiation (AD) relies on the chain rule to perform a series of basic operations when computing the derivative of a function. Elementary arithemetic operations (such as add, subtract, multiply, divide, etc.) and elementary functions (such as exp, sine, cosine, etc.) are performed at each node, and AD provides the instruction to take the derivate of the given elementary operation or function. These derivatives are accumulated via the chain rule to return the full derivative of a function. There are two modes employed: forward mode, which performs differentiation based on the independent or predictor variable, and reverse mode, which performs differentiation based on the dependent or response variable. Automatic differentiation with dual numbers provides an additional wrinkle, as we must now account for the epsilon (vector) term.
 
 ### How to Use *PackageName*
 
