@@ -145,7 +145,7 @@ class ComputeNode:
 Overall, there feel *VERY* similar. The first version is more eager-evaluation and always returning a latest-and-greatest (multi-)dual number; the second version is in some sense building the computation graph by tracking parents. The second version can respond naturally to changes in the graph, while the first version requires us to 
 
 
-**------------------------------Bruce Edit *to distinguish from Will's part in the same sector*--------------------------**<BR>
+**------------------------------Bruce Edit *to distinguish from Will's part in the same section*--------------------------**<BR>
 **How to Use *PackageName***<BR>
 A user will give a functional form, e.g. $f(x)=sin(x^2)+\frac{1}{2}x\cdot cos^2(x)+3x^3$. She is interested in knowing the functional value and derivative at $x=3$. This complex function has to be in some format that we can recognize. We may provide user a template to fill in the functional form. Also we may accept multiple variables, multiple functional forms simutaneously and/or find higher-order derivatives. In addition, the user needs to provide point(s) they are interested in evaluating the functional value(s) and the corresponding derivative value(s).<BR><BR>
 Once the functional form is provided by the user, our software creates dual number class object, parse the functional form into pieces that can be attributed to any of the fundamental functional forms. To guarantee this works, we need to create all possible fundamental functional form:<BR>
