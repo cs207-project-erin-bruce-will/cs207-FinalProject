@@ -144,12 +144,91 @@ class ComputeNode:
 
 Overall, there feel *VERY* similar. The first version is more eager-evaluation and always returning a latest-and-greatest (multi-)dual number; the second version is in some sense building the computation graph by tracking parents. The second version can respond naturally to changes in the graph, while the first version requires us to 
 
+
+**------------------------------Bruce Edit *to distinguish from Will's part in the same sector*--------------------------**
+**How to Use *PackageName***<BR>
+A user will give a functional form, e.g. $f(x)=sin(x^2)+\frac{1}{2}x\cdot cos^2(x)+3x^3$. She is interested in knowing the functional value and derivative at $x=3$. This complex function has to be in some format that we can recognize. We may provide user a template to fill in the functional form. Also we may accept multiple variables, multiple functional forms simutaneously and/or find higher-order derivatives. In addition, the user needs to provide point(s) they are interested in evaluating the functional value(s) and the corresponding derivative value(s).<BR><BR>
+Once the functional form is provided by the user, our software creates dual number class object, parse the functional form into pieces that can be attributed to any of the fundamental functional forms. To guarantee this works, we need to create all possible fundamental functional form:<BR>
+
+* $\sin(x)$, $\cos(x)$, and $\tan(x)=\frac{\sin(x)}{\cos(x)}, etc.$<BR>
+* $x^r$, where $r>0$ or $\frac{1}{x^r}$<BR>
+* $\log_bx$, where b is the base of logarithm function<BR>
+* $a^x$, where $a>0$<BR>
+* Any combination of these functional forms<BR>
+
+Ideally, we design an interface that serves as the only channel to interact with users. This may lead us to also include some GUI class for visual interface.<BR>
+
+Take the above functional form as an example, our dual number creates an object with at least two attributes: `.value` and `.derivative`. Our parsing class should decompose the above function following the table below:<BR>
+
+| Trace | Elementary Function | Current Value | Elementary Function<BR> Derivative | Elementary Function Derivative Value | 
+| :---: | :-----------------: | :-----------: | :----------------------------: | :--------------------------------------------------------: | 
+| $x_{1}$ | $x_{1}$ | 3 | $\dot{x}_{1}$ | $1$ |
+| $x_{2}$ | $x_{1}^2$ | $9$ | $2x_{1}\dot{x}_{1}$ | $6$ |
+| $x_{3}$ | $\sin(x_{2})$ | $\sin(9)$ | $\cos(x_{2})\dot{x}_{2}$ | $6\cos(9)$ |
+| $x_{4}$ | $\frac{x_{1}}{2}$ | $\frac{3}{2}$ | $\frac{\dot{x}_{1}}{2}$ | $\frac{1}{2}$ |
+| $x_{5}$ | $\cos(x_{1})$ | $\cos(3)$ | $-\sin(x_{1})\dot{x}_{1}$ | $-\sin(3)$ |
+| $x_{6}$ | $x_{5}^2$ | $\cos^2(3)$ | $2x_{5}\dot{x}_{5}$ | $-2\sin(3)\cos(3)$ | 
+| $x_{7}$ | $x_4\cdot x_{6}$ | $\frac{3}{2}\cos^2(3)$ | $x_4\dot{x}_{6}+\dot{x}_{4}x_6$ | $\frac{1}{2}\cdot \cos^2(3)-3\sin(3)\cos(3)$ |
+| $x_{8}$ | $3x_1^3$ | $81$ | $9x_1^2\cdot \dot{x_1}$ | $81$ |
+| $x_{9}$ | $x_3+x_7+x_8$ | $\sin(9)+\frac{3}{2}\cos^2(3)+81$ | $\dot{x}_3+\dot{x}_7+\dot{x}_8$ | $6\cos(9)+\frac{1}{2}\cos^2(3)-3\sin(3)\cos(3)+81$ |
+	
+
+User wants to evaluate derivatives at $a=3$, and provide a functional form $f(x)=sin(x^2)+\frac{1}{2}x\cdot cos^2(x)+3x^3$. Then inside our software, an automatic parser `separ` decomposes the function into pieces according to the add/minus sign:
+
+$$f_1,f_2,f_3 = separ(f_x)$$
+    
+For $f_1, f_2, f_3$, a dual number object is created:
+
+$$x = myAD(a)$$
+
+For each piece (i.e. $f_1,f_2,f_3$, etc.), second parser `myParser` create layers. For example, the second piece $f_2$ should be further parsed as $y_1 = \frac{1}{2}x_1$, $y_2 = \cos(x_1)$, and $y_3 = y_2^2$:
+
+$$y1,y2,y3 = myParser(f2)$$
+
+Now evaluate, for instance the functional value and derivative for piece $f_2$, where $x$ is a `myAD` object:
+$$f_2=\frac{1}{2}x cos^2(x)$$
+
+**----------------------------------------------End of Bruce Edit-------------------------------------------**
+
+
 ### Software Organization
-Discuss how you plan on organizing your software package.
-* What will the directory structure look like?  
-* What modules do you plan on including?  What is their basic functionality?
-* Where will your test suite live?  Will you use `TravisCI`? `Coveralls`?
-* How will you distribute your package (e.g. `PyPI`)?
+Discuss how you plan on organizing your software package.<BR>
+* What will the directory structure look like?
+    - The following will be our preliminary directory structure:
+    ```
+project_repo/
+             README.md
+             docs/  
+                  milestone1
+                  milestone2
+                  milestone3
+                  technical documentation
+                  user's guide
+                  ...
+             package_deliverable/
+                  class1.py
+                  class2.py
+                  class3.py
+                  others.py
+                  ...
+             test/
+                  
+             ...
+```
+* What modules do you plan on including? What is their basic functionality?
+    - Based on the prior section, we plan on delivering the following modules:
+        * `separ`: a preliminary parsing class to break down user's formatted inputs into pieces. We can separate by addition/subtraction or some other basic operation (e.g. log, exp, etc.)
+        * `myAD`: dual number class and methods that overload operators, etc.
+        * `myParser`: further decomposes into smaller, fundamental functions that can be captured and recognized by our all types of overloaded operator rules for different fundamental functions (e.g. $\left(e^{x}\right)' = e^{x}$; $ln'(x) = \frac{1}{x}$, etc.).
+    - In addition, we may include some GUI modules and/or I/O modules - more details will follow in milestone 2 document.
+* Where will your test suite live? Will you use TravisCI? Coveralls?
+    - We will perform all our tests in the *test* folder. We will create virtual environment for individual test.
+    - Yes, we've set up TravisCI and Coveralls for our project.
+
+* How will you distribute your package (e.g. PyPI)
+    - Yes, ...
+    - 
+    
 
 ### Implementation
 Discuss how you plan on implementing the forward mode of automatic differentiation.
