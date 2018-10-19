@@ -119,5 +119,4 @@ Discuss how you plan on implementing the forward mode of automatic differentiati
 * What external dependencies will you rely on?
 	- We do not believe we require any external dependencies beyond python's built-in `math` module. If we upgrade DualNumber to store a vector of values instead of scalars, we will need numpy. This would purely be a convienience to users, allowing them to write sin(vector) instead of taking each sin() individually. The power of the library is the same under both modes.
 * How will you deal with elementary functions like `sin` and `exp`?
-	- We will require users to make use of ad.sin and ad.exp, in the same way numpy requires users to work with np.sin() and np.exp()
-
+	- We will require users to make use of ad.sin and ad.exp, in the same way numpy requires users to work with np.sin() and np.exp(). As a special case, we'll have to handle $a^x$ $x^a$ and $x^x$ differently ($a$ a constant and $x$ a variable).(Unless we opt to implemnt only the most general case ($x^y$) for x and y both dual numbers) For example, when we implement the derivative of function $f(x)=x^x$, we should take consideration both the form of $x^a$ and the form of $a^x$ and obtain the derivative by chain rule $\left(e.g. \left(x^a\right)'=ax^{a-1}\cdot x'+x^aln(x)\cdot (a)'=ax^{a-1}+0=ax^{a-1}\right)$
