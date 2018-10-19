@@ -3,10 +3,12 @@
 Erin Williams, Bruce Xiong, Will Claybaugh
 
 ### Introduction
-Automatic differentiation is a set of techniques that allows a computer program to evaluate the derivative of a function as it evaluates the function's value. Automatic differentiation is a powerful tool that scales well with dimensonality of the inputs and outputs, and does not suffer from round off errors. When working with complex function of many inputs, manual calculation is unrealistic, and numeric differentiation requires a great deal of care and complex code. Automatic differentiation is automatic, allowing 
+Automatic differentiation is a set of techniques that allows a computer program to evaluate the derivative of a function as it evaluates the function's value. Automatic differentiation is a powerful tool that scales well with dimensonality of the inputs and outputs, and does not suffer from round off errors. When working with complex function of many inputs, manual calculation is unrealistic, and numeric differentiation requires a great deal of care and complex code. Automatic differentiation is, in fact, automatic, allowing the user to process functions quickly and efficiently.
 
 ### Background
 Automatic differentiation (AD) relies on the chain rule to perform elementary derivatives at the same time it performs the elementary operations which make up the function. Elementary arithemetic operations (such as add, subtract, multiply, divide, etc.) and elementary functions (such as exp, sine, cosine, etc.) are performed at each node, and AD provides the instruction to take the derivate of the given elementary operation or function. These derivatives are accumulated via the chain rule to return the full derivative of a function. There are two modes employed: forward mode, which performs differentiation based on the independent or predictor variable, and reverse mode, which performs differentiation based on the dependent or response variable.
+
+Automatic differentiation evaluates our function at each node, then stores that value to be evaluated at the next node. It recursively applies basic mathematical functions to find the value and the derivatives for more complex equations. An example of this stepwise implementation is shown in the chart below.
 
 | Trace | Elementary Function | Current Value | Elementary Function<BR> Derivative | Elementary Function Derivative Value | 
 | :---: | :-----------------: | :-----------: | :----------------------------: | :--------------------------------------------------------: | 
@@ -19,7 +21,8 @@ Automatic differentiation (AD) relies on the chain rule to perform elementary de
 | $x_{7}$ | $x_4\cdot x_{6}$ | $\frac{3}{2}\cos^2(3)$ | $x_4\dot{x}_{6}+\dot{x}_{4}x_6$ | $\frac{1}{2}\cdot \cos^2(3)-3\sin(3)\cos(3)$ |
 | $x_{8}$ | $3x_1^3$ | $81$ | $9x_1^2\cdot \dot{x_1}$ | $81$ |
 | $x_{9}$ | $x_3+x_7+x_8$ | $\sin(9)+\frac{3}{2}\cos^2(3)+81$ | $\dot{x}_3+\dot{x}_7+\dot{x}_8$ | $6\cos(9)+\frac{1}{2}\cos^2(3)-3\sin(3)\cos(3)+81$ |
-	
+
+Dual numbers augment the algebra of real numbers by adding a new component to each number. That new component, the epsilon value, is the derivative of the function at that number. Using dual numbers allows us to store both the function and it's derivative at any point. Thus, it is extremely useful to use dual number in automatic differentiation. We will use dual numbers to create an automatic differentiation package for Python.
 
 ### How to Use *PackageName*
 
@@ -44,23 +47,9 @@ val_at_1_2, grad_at_1_2 = myfun(a,b).eval()
 val2_at_1_2, grad2_at_1_2 = myfun2(a,b).eval()
 jacobian_at_1_2 = [grad_at_1_2, grad2_at_1_2]
 ```
-Autodif works by defining dual numbers and then computing as usual. Built-in python operations are handled seamlessley, and operations imported from the math package (e.g. math.sin) must be replaced with thier Autodif equivalents (e.g ad.sin in the example above). Any function that is passed dual numbers as input will return an Autodif DualNumber object that stores the function's value and derivatives at the given point. Scalars are automatically promoted to DualNumbers as needed.
+Autodif works by defining dual numbers and then computing as usual. Built-in python operations are handled seamlessley, and operations imported from the math package (e.g. math.sin) must be replaced with their Autodif equivalents (e.g ad.sin in the example above). Any function that is passed dual numbers as input will return an Autodif DualNumber object that stores the function's value and derivatives at the given point. Scalars are automatically promoted to DualNumbers as needed.
 
-In milestone 2 we intend to deliver a parser that will assist novice users, either by upgrading exsiting code to work with autograd, or helping users write autograd-ready functions via a GUI.
-
-
-| Trace | Elementary Function | Current Value | Elementary Function<BR> Derivative | Elementary Function Derivative Value | 
-| :---: | :-----------------: | :-----------: | :----------------------------: | :--------------------------------------------------------: | 
-| $x_{1}$ | $x_{1}$ | 3 | $\dot{x}_{1}$ | $1$ |
-| $x_{2}$ | $x_{1}^2$ | $9$ | $2x_{1}\dot{x}_{1}$ | $6$ |
-| $x_{3}$ | $\sin(x_{2})$ | $\sin(9)$ | $\cos(x_{2})\dot{x}_{2}$ | $6\cos(9)$ |
-| $x_{4}$ | $\frac{x_{1}}{2}$ | $\frac{3}{2}$ | $\frac{\dot{x}_{1}}{2}$ | $\frac{1}{2}$ |
-| $x_{5}$ | $\cos(x_{1})$ | $\cos(3)$ | $-\sin(x_{1})\dot{x}_{1}$ | $-\sin(3)$ |
-| $x_{6}$ | $x_{5}^2$ | $\cos^2(3)$ | $2x_{5}\dot{x}_{5}$ | $-2\sin(3)\cos(3)$ | 
-| $x_{7}$ | $x_4\cdot x_{6}$ | $\frac{3}{2}\cos^2(3)$ | $x_4\dot{x}_{6}+\dot{x}_{4}x_6$ | $\frac{1}{2}\cdot \cos^2(3)-3\sin(3)\cos(3)$ |
-| $x_{8}$ | $3x_1^3$ | $81$ | $9x_1^2\cdot \dot{x_1}$ | $81$ |
-| $x_{9}$ | $x_3+x_7+x_8$ | $\sin(9)+\frac{3}{2}\cos^2(3)+81$ | $\dot{x}_3+\dot{x}_7+\dot{x}_8$ | $6\cos(9)+\frac{1}{2}\cos^2(3)-3\sin(3)\cos(3)+81$ |
-	
+In milestone 2,we intend to deliver a parser that will assist novice users, either by upgrading exsiting code to work with autograd, or helping users write autograd-ready functions via a GUI.
 
 User wants to evaluate derivatives at $a=3$, and provide a functional form $f(x)=sin(x^2)+\frac{1}{2}x\cdot cos^2(x)+3x^3$. Then inside our software, an automatic parser `separ` decomposes the function into pieces according to the add/minus sign:
 
@@ -77,31 +66,27 @@ $$y1,y2,y3 = myParser(f2)$$
 Now evaluate, for instance the functional value and derivative for piece $f_2$, where $x$ is a `myAD` object:
 $$f_2=\frac{1}{2}x cos^2(x)$$
 
-**----------------------------------------------End of Bruce Edit-------------------------------------------**<BR>
-
-
 ### Software Organization
 Discuss how you plan on organizing your software package.<BR>
 * What will the directory structure look like?
     - The following will be our preliminary directory structure:
-    ```
-project_repo/
-             README.md
-             docs/  
-                  milestone1
-                  milestone2
-                  milestone3
-                  technical documentation
-                  user's guide
-                  ...
-             package_deliverable/
-                  autodif.py
-                  separ.py
-                  ...
-             test/
-                  
-             ...
+	
+```project_repo/  
+             README.md  
+             docs/    
+                  milestone1  
+                  milestone2  
+                  milestone3  
+                  technical documentation  
+                  user's guide  
+                  ...  
+             package_deliverable/  
+                  autodif.py  
+                  separ.py  
+                  ...  
+             test/  
 ```
+
 * What modules do you plan on including? What is their basic functionality?
     - Based on the prior section, we plan on delivering the following modules:
 		* `autodif`: Implements the DualNumber class and the extra elementary functions (`ad.sin`, `ad.exp`, and so on)
@@ -112,9 +97,7 @@ project_repo/
     - Yes, we've set up TravisCI and Coveralls for our project.
 
 * How will you distribute your package (e.g. PyPI)
-    - Yes, ...
-    - 
-    
+    - We plan to use PyPI for several reasons. It's well-know, well-established, and accessible for global python users. It's the most straightforward way to distribute a Python package at this point in time.
 
 ### Implementation
 Discuss how you plan on implementing the forward mode of automatic differentiation.
