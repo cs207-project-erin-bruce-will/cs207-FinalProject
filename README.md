@@ -247,6 +247,9 @@ functions of scalar values.  Make sure you can handle the situations of vector f
 scalar functions of vectors.  Don't forget that people will want to use your library in algorithms
 like Newton's method (among others).
 
+**A special case**:<BR>
+    When variable $x$ appears in both the base and power of a function (e.g. $f(x)=x^x$); or base and body of a logarithm function (i.e. $g(x)=log_x(x)$), we need to write algorithm to handle appropriately. For example, when we implement the derivative of function $f(x)=x^x$, we should take consideration both the form of $x^a$ and the form of $a^x$ and obtain the derivative by chain rule $\left(e.g. \left(x^a\right)'=ax^{a-1}\cdot x'+x^aln(x)\cdot (a)'=ax^{a-1}+0=ax^{a-1}\right)$
+
 Try to keep your report to a reasonable length.  It will form the core of your documentation, so you
 want it to be a length that someone will actually want to read.
 
