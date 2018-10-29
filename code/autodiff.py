@@ -5,35 +5,35 @@ import math
 # powers/roots/exponential
 class autoDiff():
     def __init__(self, name, value, derivatives=None):
-		# ideally, we should block users from using the derivtives interface. May require separate classes
-		self.value = value
-		if name is not None:
-			self.derivatives = defaultdict(float)
-			self.derivatives[name] = 1
-		else:
-			self.derivatives = derivatives
-			
-	@classmethod
-	def emptyDual(cls):
-		return cls(None,0,defaultdict(float))
-		
-	@classmethod
-	def promote(cls, other):
-		if isinstance(other,numbers.Number):
-			other = cls(None,0,defaultdict(float))
-		return other
-	
-	def __add__(self, other):
-		other = promote(other)
-		output=self.emptyDual()
-		
-		output.value = self.value + other.value
-		for k1 in self.derivatives:
-			output.derivatives[k1] += self.derivatives[k1]
-		for k2 in other.derivatives:
-			output.derivatives[k2] += other.derivatives[k2]
-		
-		return output
+        # ideally, we should block users from using the derivtives interface. May require separate classes
+        self.value = value
+        if name is not None:
+            self.derivatives = defaultdict(float)
+            self.derivatives[name] = 1
+        else:
+            self.derivatives = derivatives
+            
+    @classmethod
+    def emptyDual(cls):
+        return cls(None,0,defaultdict(float))
+        
+    @classmethod
+    def promote(cls, other):
+        if isinstance(other,numbers.Number):
+            other = cls(None,0,defaultdict(float))
+        return other
+    
+    def __add__(self, other):
+        other = promote(other)
+        output=self.emptyDual()
+        
+        output.value = self.value + other.value
+        for k1 in self.derivatives:
+            output.derivatives[k1] += self.derivatives[k1]
+        for k2 in other.derivatives:
+            output.derivatives[k2] += other.derivatives[k2]
+        
+        return output
     
     __radd__ = __add__
     
@@ -55,21 +55,21 @@ class autoDiff():
             y.deriv = -self.deriv
         return y
     def __mul__(self, other):
-		other = promote(other)
-		output=self.emptyDual()
-		
-		output.value = self.value*other.value
-		
-		# real part of first parent distributes
-		for k2 in other.derivatives:
-			output.derivatives[k2] += self.value*other.derivatives[k2]
-		
-		# real part of the second parent distributes
-		for k1 in self.derivatives:
-			output.derivatives[k1] += other.value*self.derivatives[k1]
-			
-		return output
-		
+        other = promote(other)
+        output=self.emptyDual()
+        
+        output.value = self.value*other.value
+        
+        # real part of first parent distributes
+        for k2 in other.derivatives:
+            output.derivatives[k2] += self.value*other.derivatives[k2]
+        
+        # real part of the second parent distributes
+        for k1 in self.derivatives:
+            output.derivatives[k1] += other.value*self.derivatives[k1]
+            
+        return output
+        
     __rmul__ = __mul__
     
     def __truediv__(self, other):
