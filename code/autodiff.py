@@ -3,7 +3,7 @@ import numbers
 import math
 
 # powers/roots/exponential
-class autoDiff():
+class DualNumber():
     def __init__(self, name, value, derivatives=None):
         # ideally, we should block users from using the derivtives interface. May require separate classes
         self.value = value
