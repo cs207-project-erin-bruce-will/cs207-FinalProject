@@ -7,7 +7,7 @@ import math
 
 @pytest.fixture
 def x():
-	return autodiff.DualNumber('a',2)
+	return autodiff.DualNumber('x',2)
 
 b = 5.8
 c = 3.0
