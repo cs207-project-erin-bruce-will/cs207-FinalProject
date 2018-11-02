@@ -136,14 +136,65 @@ def test_div_no_change(a,b):
 # dual ^ dual
 
 # formula: del f^g = f^g(g/f del f + ln(f)del g)
-def test_exponents(a,b):
-    pass
+def test_exponents_ds(a,s):
+    output = a**s
+    assert output.value == a.value**s
+    m = s*a.value**(s-1)
+    assert output.derivatives == {'x':m*3, 'y':m*4}
+    
+def test_exponents_sd(s,b):
+    output = s**b
+    assert output.value == s**b.value
+    m = s**b.value*math.log(s)
+    assert output.derivatives == {'x':m*1.2, 'y':m*9.5, 'z':m*5}
+    
+def test_exponents_dd(a,b):
+    output = a**b
+    assert output.value == a.value**b.value
+    m  = a.value**b.value
+    ma = b.value/a.value
+    mb = math.log(a.value)
+    assert output.derivatives == {'x':m*ma*3+m*mb*1.2, 'y':m*ma*4+m*mb*9.5, 'z':m*mb*5}
 
+def test_exponents_change(a,b):
+    a_d = a.derivatives
+    b_d = b.derivatives
+    output = a**b
+    assert a_d == a.derivatives
+    assert b_d == b.derivatives
 ###
 # logs
 ###
 # log_dual(scalar)
 # log_scalar(dual)
 # log_dual(dual)
-def test_log(a,b):
-    pass
+
+# formula: log(f)/glog(f)**2 del g + -log(g)/flog(f)**2 del f
+def test_log_ds(a,s):
+    output = ad.log(a,s)
+    assert output.value == a.value**s
+    m  = 1/math.log(a.value)**2
+    ma = -math.log(b.value)/a.value
+    assert output.derivatives == {'x':m*ma*3, 'y':m*ma*4}
+    
+def test_log_sd(s,b):
+    output = ad.log(s,b)
+    assert output.value == s**b.value
+    m  = 1/math.log(a.value)**2
+    mb = math.log(a.value)/b.value
+    assert output.derivatives == {'x':m*mb*1.2, 'y':m*mb*9.5, 'z':m*mb*5}
+    
+def test_log_dd(a,b):
+    output = ad.log(a,b)
+    assert output.value == a.value**b.value
+    m  = 1/math.log(a.value)**2
+    ma = -math.log(b.value)/a.value
+    mb = math.log(a.value)/b.value
+    assert output.derivatives == {'x':m*ma*3+m*mb*1.2, 'y':m*ma*4+m*mb*9.5, 'z':m*mb*5}
+
+def test_log_change(a,b):
+    a_d = a.derivatives
+    b_d = b.derivatives
+    output = ad.log(a,b)
+    assert a_d == a.derivatives
+    assert b_d == b.derivatives
