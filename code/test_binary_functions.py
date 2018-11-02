@@ -1,5 +1,5 @@
 import pytest
-
+import autodiff as ad
 #TODO: logs, exponents, and unitary functions
 
 @pytest.fixture
@@ -146,55 +146,4 @@ def test_exponents(a,b):
 # log_scalar(dual)
 # log_dual(dual)
 def test_log(a,b):
-    pass
-
-
-#########   
-# single input
-#########
-
-# negtion
-# f(dual)
-def test_neg(a,b):
-    pass
-    
-# plan: write function to build needed file
-# should write a few until I get bored
-#(f, f`)
-#(sin,cos)  
-    
-    
-    
-    
-def test_sin(a,b):
-    pass
-    
-def test_cos(a,b):
-    pass
-    
-def test_tan(a,b):
-    pass
-    
-def test_cot(a,b):
-    pass
-    
-def test_sec(a,b):
-    pass
-    
-def test_csc(a,b):
-    pass
-    
-def test_arcsin(a,b):
-    pass
-
-def test_arccos(a,b):
-    pass
-    
-def test_arctan(a,b):
-    pass
-    
-def test_arcsec(a,b):
-    pass
-    
-def test_arccsc(a,b):
     pass
