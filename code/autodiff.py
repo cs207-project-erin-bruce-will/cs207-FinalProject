@@ -38,22 +38,19 @@ class DualNumber():
     __radd__ = __add__
     
     def __sub__(self, other):
-        try:
-            y = autoDiff(self.val - other.val)
-            y.deriv = self.deriv - other.deriv
-        except AttributeError:
-            y = autoDiff(self.val - other)
-            y.deriv = self.deriv
-        return y
-            
-    def __rsub__(self, other):
-        try:
-            y = autoDiff(self.val - other.val)
-            y.deriv = self.deriv - other.deriv
-        except AttributeError:
-            y = autoDiff(other - self.val)
-            y.deriv = -self.deriv
-        return y
+        other = self.promote(other)
+        output = self.emptyDual()
+        
+        output.value = self.value - other.value
+        for k1 in self.derivatives:
+            output.derivatives[k1] += -self.derivatives[k1]
+        for k2 in other.derivatives:
+            output.derivatives[k2] += -other.derivatives[k2]
+
+        return output
+    
+    __rsub__ = __sub__
+    
     def __mul__(self, other):
         other = self.promote(other)
         output=self.emptyDual()
@@ -73,152 +70,178 @@ class DualNumber():
     __rmul__ = __mul__
     
     def __truediv__(self, other):
-        try:
-            y = autoDiff(self.val/other.val)
-            y.deriv = (self.deriv*other.val - self.val*other.deriv)/((other.val)**2)
-        except AttributeError:
-            y = autoDiff(self.val/other)
-            y.deriv = self.deriv/other
-        return y
+        other = self.promote(other)
+        output = self.emptyDual()
+        
+        output.value = self.value/other.value
+
+        # real part of first parent distributes
+        for k2 in other.derivatives:
+            output.derivatives[k2] += -self.value*other.derivatives[k2]/((other.value)**2)
+        
+        # real part of the second parent distributes
+        for k1 in self.derivatives:
+            output.derivatives[k1] += other.value*self.derivatives[k1]/((other.value)**2)
+            
+        return output
     
-    def __rtruediv__(self, other):
-        try:
-            y = autoDiff(self.val/other.val)
-            y.deriv = (self.deriv*other.val - self.val*other.deriv)/((other.val)**2)
-        except AttributeError:
-            y = autoDiff(other/self.val)
-            y.deriv = -other/((self.val)**2)*self.deriv
-        return y            
+    __rtruediv__ = __truediv__
     
     def __neg__(self):
-        try:
-            y = autoDiff(-self.val)
-            y.deriv = -self.deriv
-        except AttributeError:
-            y = autoDiff(-self)
-            y.deriv = -self
-        return y
+        output = self.emptyDual()
+        
+        output.value = -self.value
+        output.derivatives = -self.derivatives
+
+        return output
+
     
+
     def __pow__(self, other): #self^other => self = u(x) and other = v(x)
-        try:
-            y = autoDiff(self.val**(other.val))
-            y.deriv = other.val*((self.val)**(other.val-1))*self.deriv + ((self.val)**(other.val))*(np.log(self.val))*other.deriv
-        except AttributeError: #x^a:
-            y = autoDiff(self.val**other)
-            y.deriv = other*((self.val)**(other-1))*self.deriv
-        return y
+        other = self.promote(other)
+        output = self.emptyDual()
+        
+        output.value = self.value**other.value
+
+        # real part of first parent distributes
+        for k2 in other.derivatives:
+            output.derivatives[k2] += (self.value**other.value)*math.log(self.value)*other.derivatives[k2]
+        
+        # real part of the second parent distributes
+        for k1 in self.derivatives:
+            output.derivatives[k1] += other.value*(self.value**(other.value-1))*self.derivatives[k1]
+            
+        return output
  
 
 ####
 # End of DualNumber class; start of module's functions
 #### 
 
+#### I think we probably do not need this exp method because __power__ has achieve the goal by design ####
 def exp(other, self):
-    try: # we may not necesarily implement this try part
-        y = autoDiff(other.val**(self.val))
-        y.deriv = other.val*((other.val)**(self.val-1))*other.deriv + ((other.val)**(self.val))*(np.log(other.val))*self.deriv
-    except AttributeError:
-        y = autoDiff(other**(self.val))
-        y.deriv = other**(self.val)*np.log(other)*self.deriv
-    return y
+    pass
 
-def log(other, self):
-    try:
-        y = autoDiff(np.log(self.val)/np.log(other.val))
-        y.deriv = (self.deriv*np.log(other.val)/self.val - other.deriv*np.log(self.val)/other.val)/(np.log(other.val)**2)
-    except AttributeError:
-        y = autoDiff(np.log(self.val)/np.log(other))
-        y.deriv = 1/self.val/np.log(other)*self.deriv                
-    return y
     
+def ln(self): #natural log
+    output = self.emptyDual()
+        
+    output.value = math.log(self.value)
+        
+    # real part of the second parent distributes
+    for k1 in self.derivatives:
+        output.derivatives[k1] += self.derivatives[k1]/self.value
+            
+    return output        
+    
+def log(self, other): #self is base
+    other = self.promote(other)
+    output = self.emptyDual()
+        
+    output = ln(other)/ln(self)
+            
+    return output
+
+    
+    #### We probably do not need this logx method, either ####
 def logx(self, other):#when base is a function of x
-    try:
-        y = autoDiff(np.log(other.val)/np.log(self.val))
-        y.deriv = (other.deriv*np.log(self.val)/other.val - self.deriv*np.log(other.val)/self.val)/(np.log(self.val)**2)
-    except AttributeError:
-        y = autoDiff(np.log(other)/np.log(self.val))
-        y.deriv = -np.log(other)*self.deriv/self.val/((np.log(self.val))**2)
-    return y
+    pass
     
+
 def sin(self):
-    try:
-        y = autoDiff(np.sin(self.val))
-        y.deriv = np.cos(self.val)*self.deriv
-    except AttributeError:
-        y = autoDiff(np.sin(self))
-        y.deriv = 0
-    return y
-    
+    output = self.emptyDual()
+    output.value = math.sin(self.value)
+        
+    # real part of the first parent distributes
+    for k1 in self.derivatives:
+        output.derivatives[k1] += math.cos(self.value)*self.derivatives[k1]
+            
+    return output
+
+
 def cos(self):
-    try:
-        y = autoDiff(np.cos(self.val))
-        y.deriv = -np.sin(self.val)*self.deriv
-    except AttributeError:
-        y = autoDiff(np.cos(self))
-        y.deriv = 0
-    return y
-    
+    output = self.emptyDual()
+    output.value = math.cos(self.value)
+        
+    # real part of the first parent distributes
+    for k1 in self.derivatives:
+        output.derivatives[k1] += -math.sin(self.value)*self.derivatives[k1]
+            
+    return output
+
+
 def tan(self): #need to check 0 in denominator
-    a = sin(self)
-    b = cos(self)
-    y = a/b
-    return y
+    output = self.emptyDual()
+    output = sin(self)/cos(self)
+            
+    return output
+
 
 def cot(self):
-    a = tan(self)
-    y = 1/a
-    return y
+    output = self.emptyDual()
+    output = cos(self)/sin(self)
+            
+    return output
+
 
 def sec(self):
-    a = sin(self)
-    y = 1/a
-    return y
+    output = self.emptyDual()
+    output = 1/sin(self)
+            
+    return output
+
 
 def csc(self):
-    a = cos(self)
-    y = 1/a
-    return y
+    output = self.emptyDual()
+    output = 1/cos(self)
+            
+    return output
+
 
 def arcsin(self): # must make sure self is strictly between -1 and 1, exclusive
-    if type(self)==autoDiff and (self.val<-1 or self.val>1): # out of domain
+    output = self.emptyDual()
+    if self.value<-1 or self.value>1: # out of domain
         raise Exception('The value entering into arcsin function must be strictly within -1 and 1.')
+
+    output.value = math.asin(self.value)
         
-    if type(self)!=autoDiff and (self<-1 or self>1):
-        raise Exception('The value entering into arcsin function must be strictly within -1 and 1.')
-        
-    try:
-        y = autoDiff(np.arcsin(self.val))
-        y.deriv = 1/((1-self.val**2)**(0.5))*self.deriv
-    except AttributeError:
-        y = autoDiff(np.arcsin(self))
-        y.deriv = 0
-    return y
-        
+    # real part of the first parent distributes
+    for k1 in self.derivatives:
+        output.derivatives[k1] += 1/math.sqrt(1-self.value**2)*self.derivatives[k1]
+            
+    return output
+
+
 def arccos(self):
-    a = arcsin(self)
-    y = np.pi/2 - a
-    return y
+    output = self.emptyDual()
+    output = math.pi/2 - arcsin(self)
+        
+    return output
+
 
 def arctan(self):
-    a = self/((1+self**2)**0.5)
-    y = arcsin(a)
-    return y
+    output = self.emptyDual()
+    output = arcsin(self/math.sqrt(1+self**2))
+        
+    return output
+
 
 def arccot(self):
-    a = arctan(self)
-    y = np.pi/2 - a
-    return y
+    output = self.emptyDual()
+    output = math.pi/2 - arctan(self)
+        
+    return output
+
 
 def arcsec(self):
-    a = 1/self
-    y = arccos(a)
-    return y
+    output = self.emptyDual()
+    output = arccos(1/self)
+        
+    return output
+
 
 def arccsc(self):
-    a = arcsec(self)
-    y = np.pi/2 - a
-    return y
-
-#### Do we need to implement hyperbolic function e.g. sinh, cosh, tanh, coth, etc.? ####
-    
-
+    output = self.emptyDual()
+    output = math.pi/2 - arcsec(self)
+        
+    return output
