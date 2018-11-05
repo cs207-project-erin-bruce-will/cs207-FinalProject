@@ -1,5 +1,6 @@
 import pytest
 import autodiff as ad
+import math
 #TODO: logs, exponents, and unitary functions
 
 @pytest.fixture
@@ -102,21 +103,21 @@ def test_mul_no_change(a,b):
 def test_div_ds(a,s):
     output = a/s
     assert output.value == a.value/s
-    assert output.derivatives == {'x':3/s, 'y':4/s}
+    assert output.derivatives == pytest.approx({'x':3/s, 'y':4/s})
     
 def test_div_sd(s,b):
     output = s/b
-    assert output.value == b.value/s
-    coef = -s*b.value**2
-    assert output.derivatives == {'x':coef*1.2, 'y':coef*9.5, 'z':coef*5}
+    assert output.value == s/b.value
+    coef = -s/(b.value**2)
+    assert output.derivatives == pytest.approx({'x':coef*1.2, 'y':coef*9.5, 'z':coef*5})
     
 def test_div_dd(a,b):
     output = a/b
-    assert output.value == a.value+b.value
+    assert output.value == a.value/b.value
     den = b.value**2
     f = a.value
     g = b.value
-    assert output.derivatives == {'x':(g*3-f*1.2)/den, 'y':(g*4-f*9.5)/den, 'z':(g*0-f*5)/den}
+    assert output.derivatives == pytest.approx({'x':(g*3-f*1.2)/den, 'y':(g*4-f*9.5)/den, 'z':(g*0-f*5)/den})
 
 def test_div_no_change(a,b):
     a_d = a.derivatives
@@ -172,25 +173,25 @@ def test_exponents_change(a,b):
 # formula: log(f)/glog(f)**2 del g + -log(g)/flog(f)**2 del f
 def test_log_ds(a,s):
     output = ad.log(a,s)
-    assert output.value == a.value**s
+    assert output.value == math.log(s, a.value)
     m  = 1/math.log(a.value)**2
-    ma = -math.log(b.value)/a.value
-    assert output.derivatives == {'x':m*ma*3, 'y':m*ma*4}
+    ma = -math.log(s)/a.value
+    assert output.derivatives == pytest.approx({'x':m*ma*3, 'y':m*ma*4})
     
 def test_log_sd(s,b):
     output = ad.log(s,b)
-    assert output.value == s**b.value
-    m  = 1/math.log(a.value)**2
-    mb = math.log(a.value)/b.value
-    assert output.derivatives == {'x':m*mb*1.2, 'y':m*mb*9.5, 'z':m*mb*5}
+    assert output.value == math.log(b.value, s)
+    m  = 1/math.log(s)**2
+    mb = math.log(s)/b.value
+    assert output.derivatives == pytest.approx({'x':m*mb*1.2, 'y':m*mb*9.5, 'z':m*mb*5})
     
 def test_log_dd(a,b):
     output = ad.log(a,b)
-    assert output.value == a.value**b.value
+    assert output.value == math.log(b.value,a.value)
     m  = 1/math.log(a.value)**2
     ma = -math.log(b.value)/a.value
     mb = math.log(a.value)/b.value
-    assert output.derivatives == {'x':m*ma*3+m*mb*1.2, 'y':m*ma*4+m*mb*9.5, 'z':m*mb*5}
+    assert output.derivatives == pytest.approx({'x':m*ma*3+m*mb*1.2, 'y':m*ma*4+m*mb*9.5, 'z':m*mb*5})
 
 def test_log_change(a,b):
     a_d = a.derivatives
