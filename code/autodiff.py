@@ -183,8 +183,12 @@ def ln(self): #natural log
     return output        
     
 def log(self, other): #log_other(self) and other is base
-    other = self.promote(other)
-    output = self.emptyDual()
+    try:
+        other = self.promote(other)
+        output = self.emptyDual()
+    except AttributeError:
+        self = other.promote(self)
+        output = other.emptyDual()
     if self.value<=0: # out of domain
         raise Exception('The domain of logarithm function is any positive number.')
         
