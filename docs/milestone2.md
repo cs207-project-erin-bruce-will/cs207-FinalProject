@@ -24,6 +24,8 @@ Here are the main requirements for the second milestone:
 2. Test suite
 3. Updated / extended documentation
 4. Proposal for additional features
+(Support for arrays, add dot product function, etc)
+(Jacobian function, "AD.Jacobian". Returns matrix of derviatives)
 
 ### Working Forward Mode Implementation
 You must have a working forward mode implementation.  This does not mean, however, that you should
