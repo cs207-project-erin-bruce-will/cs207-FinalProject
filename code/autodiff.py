@@ -43,13 +43,23 @@ class DualNumber():
         
         output.value = self.value - other.value
         for k1 in self.derivatives:
-            output.derivatives[k1] += -self.derivatives[k1]
+            output.derivatives[k1] += self.derivatives[k1]
         for k2 in other.derivatives:
             output.derivatives[k2] += -other.derivatives[k2]
 
         return output
     
-    __rsub__ = __sub__
+    def __rsub__(self, other):
+        other = self.promote(other)
+        output = self.emptyDual()
+        
+        output.value = other.value - self.value
+        for k1 in self.derivatives:
+            output.derivatives[k1] += -self.derivatives[k1]
+        for k2 in other.derivatives:
+            output.derivatives[k2] += other.derivatives[k2]
+
+        return output        
     
     def __mul__(self, other):
         other = self.promote(other)
@@ -85,13 +95,28 @@ class DualNumber():
             
         return output
     
-    __rtruediv__ = __truediv__
+    def __rtruediv__(self, other):
+        other = self.promote(other)
+        output = self.emptyDual()
+        
+        output.value = other.value/self.value
+
+        # real part of first parent distributes
+        for k2 in other.derivatives:
+            output.derivatives[k2] += self.value*other.derivatives[k2]/((self.value)**2)
+        
+        # real part of the second parent distributes
+        for k1 in self.derivatives:
+            output.derivatives[k1] += -other.value*self.derivatives[k1]/((self.value)**2)
+            
+        return output        
     
     def __neg__(self):
         output = self.emptyDual()
         
         output.value = -self.value
-        output.derivatives = -self.derivatives
+        for k1 in self.derivatives:
+            output.derivatives[k1] += -self.derivatives[k1]
 
         return output
 
@@ -112,20 +137,43 @@ class DualNumber():
             output.derivatives[k1] += other.value*(self.value**(other.value-1))*self.derivatives[k1]
             
         return output
+    
+    def __rpow__(self, other):
+        other = self.promote(other)
+        output = self.emptyDual()
+        
+        output.value = other.value**self.value
+
+        # real part of first parent distributes
+        for k2 in other.derivatives:
+            output.derivatives[k2] += self.value*(other.value**(self.value-1))*other.derivatives[k2]
+        
+        # real part of the second parent distributes
+        for k1 in self.derivatives:
+            output.derivatives[k1] += (other.value**self.value)*math.log(other.value)*self.derivatives[k1]
+
+        return output
  
 
 ####
 # End of DualNumber class; start of module's functions
 #### 
 
-#### I think we probably do not need this exp method because __power__ has achieve the goal by design ####
-def exp(other, self):
-    pass
+def sqrt(self): #square root function overload
+    output = self.emptyDual()
+    output = self**0.5
 
+    return output
+    
+def exp(self): #natural exponential
+    output = self.emptyDual()
+    base = math.exp(1)
+    output = base**self
+
+    return output
     
 def ln(self): #natural log
     output = self.emptyDual()
-        
     output.value = math.log(self.value)
         
     # real part of the second parent distributes
@@ -134,19 +182,18 @@ def ln(self): #natural log
             
     return output        
     
-def log(self, other): #self is base
+def log(self, other): #log_other(self) and other is base
     other = self.promote(other)
     output = self.emptyDual()
+    if self.value<=0: # out of domain
+        raise Exception('The domain of logarithm function is any positive number.')
         
-    output = ln(other)/ln(self)
+    if other.value<=0: # base must be something positive
+        raise Exception('The base of logarithm function is any positive number.')
+        
+    output = ln(self)/ln(other)
             
     return output
-
-    
-    #### We probably do not need this logx method, either ####
-def logx(self, other):#when base is a function of x
-    pass
-    
 
 def sin(self):
     output = self.emptyDual()
@@ -186,14 +233,14 @@ def cot(self):
 
 def sec(self):
     output = self.emptyDual()
-    output = 1/sin(self)
+    output = 1/cos(self)
             
     return output
 
 
 def csc(self):
     output = self.emptyDual()
-    output = 1/cos(self)
+    output = 1/sin(self)
             
     return output
 
@@ -221,7 +268,7 @@ def arccos(self):
 
 def arctan(self):
     output = self.emptyDual()
-    output = arcsin(self/math.sqrt(1+self**2))
+    output = arcsin(self/sqrt(1+self**2))
         
     return output
 
