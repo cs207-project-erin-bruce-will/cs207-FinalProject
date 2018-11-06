@@ -4,7 +4,7 @@
 
 Erin, Bruce, and Will
 
-# Milestone 1
+# Milestone 2 Update
 
 ### Introduction
 Automatic differentiation is a set of techniques that allows a computer program to evaluate the derivative of a function as it evaluates the function's value. Automatic differentiation is a powerful tool that scales well with dimensonality of the inputs and outputs, and does not suffer from round off errors. When working with complex function of many inputs, manual calculation is unrealistic, and numeric differentiation requires a great deal of care and complex code. Automatic differentiation is automatic, allowing 
@@ -15,13 +15,14 @@ Automatic differentiation (AD) relies on the chain rule to perform elementary de
 ### How to Use *PackageName*
 
 ```python
-import autodif as ad
+import autodiff as ad
 
-def my_fun(a,b):
-	return (a+b)*ad.sin(a+b)
+b = DualNumber(None,-2/3,{'x':1.2, 'y':9.5, 'z':5})
 	
-def my_fun2(a,b):
-	return 2*(a+b)/(a-b-3)
+y = cos(x)
+
+y.value
+y.derivatives['x','y','z']
 
 a = ad.DualNumber('a',7)
 b = ad.DualNumber('b',8)
