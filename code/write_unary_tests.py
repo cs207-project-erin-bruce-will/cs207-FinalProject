@@ -11,9 +11,9 @@ test_tuples = [
 	("arcsin", 	"math.asin(x)", 	"1/math.sqrt(1-x**2)", 					""),
 	("arccos", 	"math.acos(x)", 	"-1/math.sqrt(1-x**2)", 				""),
 	("arctan", 	"math.atan(x)", 	"1/(1+x**2)", 							""),
-	("arccot", 	"math.atan(1/x)", 	"-1/(1+x**2)", 							"inv"),
-	("arcsec", 	"math.acos(1/x)", 	"1/(math.abs(x)*math.sqrt(x**2-1))", 	"inv"),
-	("arccsc", 	"math.asin(1/x)", 	"-1/(math.abs(x)*math.sqrt(x**2-1))", 	"inv")
+	("arccot", 	"math.pi/2 - math.atan(x)", 	"-1/(1+x**2)", 					""),
+	("arcsec", 	"math.acos(1/x)", 	"1/(abs(x)*math.sqrt(x**2-1))", 	"inv"),
+	("arccsc", 	"math.asin(1/x)", 	"-1/(abs(x)*math.sqrt(x**2-1))", 	"inv")
 ]
 
 preamble = """import pytest
@@ -29,7 +29,7 @@ def b():
 @pytest.fixture
 def binv():
     from autodiff import DualNumber
-    binv = DualNumber(None,-2/3,{'x':1.2, 'y':9.5, 'z':5})
+    binv = DualNumber(None,-3/2,{'x':1.2, 'y':9.5, 'z':5})
     return binv
 
 @pytest.fixture
@@ -66,7 +66,7 @@ def test_{0}_s(s{3}):
 	def value(x):
 		return {1}
 	output = ad.{0}(s{3})
-	assert output.value == value(s{3})
+	assert output.value == pytest.approx(value(s{3}))
 	assert output.derivatives == {{}}
 
 def test_{0}_d(b{3}):
@@ -76,7 +76,7 @@ def test_{0}_d(b{3}):
 		return {2}
 	
 	output = ad.{0}(b{3})
-	assert output.value == value(b{3}.value)
+	assert output.value == pytest.approx(value(b{3}.value))
 	coef = der(b{3}.value)
 	assert output.derivatives == pytest.approx({{'x':coef*1.2, 'y':coef*9.5, 'z':coef*5}})
 	
