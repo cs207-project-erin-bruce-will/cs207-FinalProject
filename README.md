@@ -8,7 +8,7 @@ Erin, Bruce, and Will
 
 
 
-### How to Use *PackageName*
+### How to Use *autodiff*
 
 ```python
 import autodiff as ad
