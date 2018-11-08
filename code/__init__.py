@@ -1,5 +1,7 @@
 # __init.py__
 
+from autodiff import autodiff
+
 from code import autodiff
 from code import integration_test
 from code import test_binary_functions
