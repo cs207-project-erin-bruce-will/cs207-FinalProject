@@ -143,13 +143,22 @@ Autodiff has the following dependencies built-in:
     ![Image2](images/Equation2.JPG "Equation2")
 
     - Therefore when we implement the derivatives, including the very special case such as $y=x^x$, the following chain rule applies:
-$$\frac{df(x)}{dx}=\frac{d\left[u(x)\right]^{v(x)}}{dx}=v(x)\left[u(x)\right]^{v(x)-1}\cdot u'(x)+\left[u(x)\right]^{v(x)}\cdot ln(u(x))\cdot v'(x)$$
+    ![Image3](images/Equation3.JPG "Equation3")	
     - The above basically covers most of the powers/ roots/ exponential functions, such as:
-        - $y=x^{2.6}$
-        - $y=\sqrt[3]{x^2}$
-        - $y=2^x-3x^5$
-        - One special Case is $y = \sqrt{u(x)}$. We implement it as one of the elementary functions for convenience.
-        - Another special case is exponential function with natural base $y=e^x$. We also implement it separately for convenience purpose.
+    	![Image4](images/Equation4.JPG "Eq4")
+
+## Elementary Functions Implementation Details:
+- General form of logarithm function:
+	![Image5](images/Equation5.JPG "Eq5")
+    - We first implement a special case $y=\ln(x)$, the logarithm function with natural base: ![Image6](images/Equation6.JPG "Eq6")
+    - Then ![Image7](images/Equation7.JPG "Eq7")
+    - To get the derivatives, we just apply division rule.
+    - We set up checks for domains of both base and exponent: both must be strictly positive to be meaningful.
+    
+- Trigonometric and anti-trigonometric functions:
+    - `sin(x)`, `cos(x)`, `tan(x)`, `cot(x)`, `sec(x)`, `csc(x)`: the last four can be derived from `sin(x)` or `cos(x)`.
+    - `arcsin(x)`, `arccos(x)`, `arctan(x)`, `arccot(x)`, `arcsec(x)`, `arccsc(x)`: essentially we only need to implement `arcsin(x)` and all other anti-trigonometric functions can be derived from `arcsin(x)`.
+    - We set up checks for domain of `arcsin(x)` because it has to be between -1 and 1.    
 
 ## Extensions
 The following are coming to autodiff very sooon.
