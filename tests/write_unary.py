@@ -17,18 +17,18 @@ test_tuples = [
 ]
 
 preamble = """import pytest
-import ourProject.autodiff as ad
+import autodiff as ad
 import math
 
 @pytest.fixture
 def b():
-    from ourProject.autodiff import DualNumber
+    from autodiff import DualNumber
     b = DualNumber(None,-2/3,{'x':1.2, 'y':9.5, 'z':5})
     return b
 	
 @pytest.fixture
 def binv():
-    from ourProject.autodiff import DualNumber
+    from autodiff import DualNumber
     binv = DualNumber(None,-3/2,{'x':1.2, 'y':9.5, 'z':5})
     return binv
 
@@ -87,7 +87,7 @@ def test_{0}_no_change(b{3}):
 	
 """
 
-with open("test_unary_functions.py",'w') as outfile:
+with open("tests/test_unary_functions.py",'w') as outfile:
 	outfile.write(preamble)
 	outfile.write(negation_test)
 	for cur_tup in test_tuples:

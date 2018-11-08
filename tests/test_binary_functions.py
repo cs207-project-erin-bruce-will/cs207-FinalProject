@@ -1,17 +1,17 @@
 import pytest
-import ourProject.autodiff as ad
+import autodiff as ad
 import math
 #TODO: logs, exponents, and unitary functions
 
 @pytest.fixture
 def a():
-    from ourProject.autodiff import DualNumber
+    from autodiff import DualNumber
     a = DualNumber(None,3.5,{'y':4,'x':3})
     return a
 
 @pytest.fixture
 def b():
-    from ourProject.autodiff import DualNumber
+    from autodiff import DualNumber
     b = DualNumber(None,2,{'x':1.2, 'y':9.5, 'z':5})
     return b
 

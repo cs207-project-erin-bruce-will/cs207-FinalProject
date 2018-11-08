@@ -1,16 +1,16 @@
 import pytest
-import ourProject.autodiff as ad
+import autodiff as ad
 import math
 
 @pytest.fixture
 def b():
-    from ourProject.autodiff import DualNumber
+    from autodiff import DualNumber
     b = DualNumber(None,-2/3,{'x':1.2, 'y':9.5, 'z':5})
     return b
 	
 @pytest.fixture
 def binv():
-    from ourProject.autodiff import DualNumber
+    from autodiff import DualNumber
     binv = DualNumber(None,-3/2,{'x':1.2, 'y':9.5, 'z':5})
     return binv
 
