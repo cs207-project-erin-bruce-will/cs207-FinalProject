@@ -136,7 +136,7 @@ Autodiff has the following dependencies built-in:
 ## "autodiff" Class Methods:
 - We overload common operators such as `__add__`, `__sub__`, `__mul__`, and `__truediv__` and their commutative pairs `__radd__`, `__rsub__`, `__rmul__`, and `__rtruediv__`.
     - The basic rules for derivatives of multiplication and division are applied:
-    ![Image1}(images/Equation1.jpg "Equations1")
+    ![Image1](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/images/Equation1.JPG "Equations1")
     $$\frac{d[u(x)\cdot v(x)]}{dx}=u'(x)\cdot v(x)+u(x)\cdot v'(x)$$
     $$\frac{d\left[\frac{u(x)}{v(x)}\right]}{dx}=\frac{u'(x)\cdot v(x)-u(x)\cdot v'(x)}{v^2(x)}$$
 - We overload unary operator `__neg__`
