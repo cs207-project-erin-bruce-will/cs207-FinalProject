@@ -122,4 +122,6 @@ The following are coming to autodiff very sooon.
  - verify that our choice of branch in inverse trig functions matches `math` and `numpy`
  - add default arguments to log and exp
  - support non-differentiable functions like absolute value
+ - Jacobian matrix as an output
+ - GUI interface for a better client visual experience
  
