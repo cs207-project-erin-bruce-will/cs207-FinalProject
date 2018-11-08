@@ -8,36 +8,51 @@ Erin, Bruce, and Will
 
 
 
-### How to Use *autodiff*
+## Introduction
+Autodiff finds the derivatives of a function (to machine precision!) at the same time it finds the value of the function.
+```
+import autodiff as ad
 
+x = ad.DualNumber('x', 2)
+y = ad.DualNumber('y', 3)
+
+out = x/y
+out.value # 0.66666
+out.derivatives #{x: 1/3, y: -2/(3**2)}
+```
+Autodiff works across any number of inputs
+
+## How to use autodiff
+Autodiff is installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add its folder to your python path (```import sys
+sys.path.insert(0, '/path_to_autodiff/')```) and import as normal. 
+
+Autodiff will be available via pip soon.
+
+Using autodiff is very simple:
 ```python
 import autodiff as ad
 
-b = ad.DualNumber(None,2,{'x':1.2, 'y':9.5, 'z':5})
-	
-y = ad.cos(x)
+def f(a,b):
+	return a/b*ad.sin(a*b)
 
-y.value
+out = f(DualNumber('x',2),DualNumber('y',3)))
+
+out.value
 -0.416146837
 
-y.derivatives['x']
+out.derivatives['x']
 -1.09115691
 
-y.derivatives['y']
+out.derivatives['y']
 -8.63832555
-
-y.derivatives['z']
--4.54648713
-
 ```
+
 Autodif works by defining dual numbers and then computing as usual. Built-in python operations are handled seamlessley, and operations imported from the math package (e.g. math.sin) must be replaced with thier Autodif equivalents (e.g ad.sin in the example above). Any function that is passed dual numbers as input will return an Autodif DualNumber object that stores the function's value and derivatives at the given point. Scalars are automatically promoted to DualNumbers as needed.
 
 In milestone 2 we intend to deliver a parser that will assist novice users, either by upgrading exsiting code to work with autograd, or helping users write autograd-ready functions via a GUI.
 
-### Introduction
-Automatic differentiation is a set of techniques that allows a computer program to evaluate the derivative of a function as it evaluates the function's value. Automatic differentiation is a powerful tool that scales well with dimensonality of the inputs and outputs, and does not suffer from round off errors. When working with complex function of many inputs, manual calculation is unrealistic, and numeric differentiation requires a great deal of care and complex code. Automatic differentiation is, in fact, automatic, allowing the user to process functions quickly and efficiently.
 
-### Background
+## Background
 Automatic differentiation (AD) relies on the chain rule to perform elementary derivatives at the same time it performs the elementary operations which make up the function. Elementary arithemetic operations (such as add, subtract, multiply, divide, etc.) and elementary functions (such as exp, sine, cosine, etc.) are performed at each node, and AD provides the instruction to take the derivate of the given elementary operation or function. These derivatives are accumulated via the chain rule to return the full derivative of a function. There are two modes employed: forward mode, which performs differentiation based on the independent or predictor variable, and reverse mode, which performs differentiation based on the dependent or response variable.
 
 Automatic differentiation evaluates our function at each node, then stores that value to be evaluated at the next node. It recursively applies basic mathematical functions to find the value and the derivatives for more complex equations. An example of this stepwise implementation is shown in the chart below.
@@ -56,30 +71,54 @@ Automatic differentiation evaluates our function at each node, then stores that 
 
 Dual numbers augment the algebra of real numbers by adding a new component to each number. That new component, the epsilon value, is the derivative of the function at that number. Using dual numbers allows us to store both the function and it's derivative at any point. Thus, it is extremely useful to use dual number in automatic differentiation. We will use dual numbers to create an automatic differentiation package for Python.
 
-### Software Organization
-
-The following will be our preliminary directory structure:
+  
+## Software organization
+Autodiff is organized as follows:
     ```
 cs207-FinalProject/
-             README.md
-	     .travis.yml
-	     setup.cfg
+             README.md (The current user's guide)
+			 various hooks (travis.yml and so on)
              docs/  
-                  milestone1
-                  milestone2
-                  milestone3
-		  README_v1.md
-                  technical documentation
-                  user's guide
-                  ...
+                  READMEs from various milestones
              code/
-                  autodiff.py
-		  integration_test.py
-		  test_binary_functions.py
-	          test_unary_functions.py
-		  write_unary_tests.py
-                  separ.py
-                  
-             ...
+                  autodiff.py (The key class and functions)
+		     tests/
+				various unit an integration tests
 ```
 * Currently, you can install our package from GitHub.
+
+#### Modules
+Autoiff has just one module: autodiff.py. It contains the DualNumber class and all its accesories.
+
+#### Tests
+Autodiff is tested via `pytest`. To run the tests, navigate to TODO and run `TODO`. You can run an individual set of tests via `TODO`. 
+
+#### Installation
+Support for installation via `pip` is coming soon. 
+
+In the mean time, follow the steps below:
+1. clone or download autodiff from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject)
+2. in python files where you want to use autodiff, include the code ```import sys
+sys.path.insert(0, '/path_to_autodiff/')
+import autodiff as ad```
+
+That's it! Note that editing sys.path is undone when you close python so removing autodiff from your system just requires you to delete the autodiff folder.
+
+	  
+## Implementation details
+The autodiff package is dead simple: there is a single module (`autodiff`) and a single class (`DualNumber`), along with autodiff package versions of functions in the `math` module, e.g `sin` and `log`. It has no external dependencies.
+
+Any `DualNumber` has two components: a value and a dictionary of derivatives. The value is the real-number result of whatever computation returned this dual number. The derivatives are a dictionary mapping variable names to real numbers, for instance `{'x':3, 'y':0.2}`. This would mean that the computation that produced this dual number depends on original inputs named x and y (and no others) and the derivative in the x direction is 3, while the derivative in the y direction is 1/5. Importantly, dual numbers don't care how they were produced, and can be the result of arbitrarially complex user-defined functions. In fact, (soon) any function that is written in pure python can simply be called on `DualNumber` inputs to get the derivatives at those input values.
+
+Dual numbers work by simply updating the present derivatives in each direction at the same time a new value is computed. For example, the product rule: $\nabla xy = x\nabla y + y\nabla x$ says "to make the output's derivatives, take the derivatives stored in y and multiply them by x's value, then add the derivatives stored in x multiplied by y's value". 
+
+#### Extensions
+The following are coming to autodiff very sooon.
+ - support comparison operators > and <
+ - support DualNumber('x', np.ones(20)), where a single variable can refer to an array of values
+ - streamline functions like ad.sin() to return a scalar when given scalar input
+ - simplify handling of rsub, rpow and others
+ - verify that our choice of branch in inverse trig functions matches `math` and `numpy`
+ - add default arguments to log and exp
+ - support non-differentiable functions like absolute value
+ 
