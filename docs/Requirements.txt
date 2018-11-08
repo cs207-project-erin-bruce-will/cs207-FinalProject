@@ -1,1 +1,1 @@
-pytest --pyargs mypkg
+pytest --pyargs ourProject
