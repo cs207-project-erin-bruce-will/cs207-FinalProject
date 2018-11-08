@@ -8,7 +8,7 @@ import math
 @pytest.fixture
 def x():
 	import ourProject.autodiff
-	return autodiff.DualNumber('x',2)
+	return DualNumber('x',2)
 
 @pytest.fixture
 def y():
