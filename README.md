@@ -17,19 +17,23 @@ x = ad.DualNumber('x', 2)
 y = ad.DualNumber('y', 3)
 
 out = x/y
-out.value # 0.66666
-out.derivatives #{x: 1/3, y: -2/(3**2)}
+out.value # 0.66666, the value of 2 divided by 3
+out.derivatives #{x: 1/3, y: -2/(3**2)}, the gradient of x/y at (2,3)
 ```
-Autodiff works across any number of inputs
+Autodiff works for functions and expressions with any number of inputs
 
 ## How to use autodiff
-Autodiff is installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add its folder to your python path (```import sys
-sys.path.insert(0, '/path_to_autodiff/')```) and import as normal. 
+
+#### Installation
+Autodiff is installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
+sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
 
 Autodiff will be available via pip soon.
 
 Using autodiff is very simple:
 ```python
+import sys
+sys.path.insert("C:/Users/Will/cs207-FinalProject/")
 import autodiff as ad
 
 def f(a,b):
@@ -47,9 +51,7 @@ out.derivatives['y']
 -8.63832555
 ```
 
-Autodif works by defining dual numbers and then computing as usual. Built-in python operations are handled seamlessley, and operations imported from the math package (e.g. math.sin) must be replaced with thier Autodif equivalents (e.g ad.sin in the example above). Any function that is passed dual numbers as input will return an Autodif DualNumber object that stores the function's value and derivatives at the given point. Scalars are automatically promoted to DualNumbers as needed.
-
-In milestone 2 we intend to deliver a parser that will assist novice users, either by upgrading exsiting code to work with autograd, or helping users write autograd-ready functions via a GUI.
+Autodiff works by defining dual numbers and then computing as usual. Built-in python operations are handled seamlessley, and operations imported from the math package (e.g. math.sin) must be replaced with thier Autodiff equivalents (e.g ad.sin in the example above). Any function that is passed dual numbers as input will return an Autodif DualNumber object that stores the function's value and derivatives at the given point. Scalars are automatically promoted to DualNumbers as needed.
 
 
 ## Background
@@ -78,13 +80,12 @@ Autodiff is organized as follows:
 ```
 cs207-FinalProject/
              README.md (The current user's guide)
-			 various hooks (travis.yml and so on)
-             docs/  
+			 autodiff.py (The key class and functions)
+			 docs/  
                   READMEs from various milestones
-             code/
-                  autodiff.py (The key class and functions)
-		     tests/
-				various unit an integration tests
+			 tests/
+				various unit and integration tests
+			 various hooks for pytest and travis
 ```
 * Currently, you can install our package from GitHub.
 
@@ -99,11 +100,13 @@ Support for installation via `pip` is coming soon.
 
 In the mean time, follow the steps below:
 1. clone or download autodiff from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject)
-2. in python files where you want to use autodiff, include the code ```import sys
+2. in python files where you want to use autodiff, include the code 
+```import sys
 sys.path.insert(0, '/path_to_autodiff/')
-import autodiff as ad```
+import autodiff as ad
+```
 
-That's it! Note that editing sys.path is undone when you close python so removing autodiff from your system just requires you to delete the autodiff folder.
+That's it! Note that editing sys.path is undone when you close python so removing autodiff from your system just requires you to delete the autodiff folder. However, you must write carefully if you want your code to be portable: a user may not have autodiff's repo saved under the same path as you do. Consider
 
 	  
 ## Implementation details
@@ -113,12 +116,13 @@ Any `DualNumber` has two components: a value and a dictionary of derivatives. Th
 
 Dual numbers work by simply updating the present derivatives in each direction at the same time a new value is computed. For example, the product rule: $\nabla xy = x\nabla y + y\nabla x$ says "to make the output's derivatives: take the derivatives stored in y and multiply them by x's value, then add the derivatives stored in x multiplied by y's value". 
 
-#### Extensions
+## Extensions
 The following are coming to autodiff very sooon.
  - support comparison operators > and <
- - support DualNumber('x', np.ones(20)), where a single variable can refer to an array of values
+ - one-line code for the jacobian or gradient, e.g. `J = ad.jacobian(f,g,h, x=DualNumber('x',3),y=DualNumber('y',5.5)` returning the matrix of [df/dx, df/dy; dg/dx, dg/dy; dh/dx, dh/dy;]
+ - support `DualNumber('x', np.ones(20))`, where a single variable can refer to an array of values
  - streamline functions like ad.sin() to return a scalar when given scalar input
- - simplify handling of rsub, rpow and others
+ - simplify internal handling of rsub, rpow and others
  - verify that our choice of branch in inverse trig functions matches `math` and `numpy`
  - add default arguments to log and exp
  - support non-differentiable functions like absolute value
