@@ -79,15 +79,27 @@ Autodiff is organized as follows:
 
 ```
 cs207-FinalProject/
-             README.md (The current user's guide)
-			 autodiff.py (The key class and functions)
-			 docs/  
-                  READMEs from various milestones
-			 tests/
-				various unit and integration tests
-			 various hooks for pytest and travis
+        README.md (The current user's guide)
+	__init.py__
+	autodiff.py (The key class and functions)
+	.travis.yml
+	setup.cfg
+	docs/
+        	Historic READMEs
+		Demo.ipynb
+		Implementation.ipynb
+		Requirements.txt
+		milestone1.md
+		milestone2.md
+	tests/
+		__init__.py
+		integration_test.py
+		test_binary_functions.py
+		test_unary_functions.py
+		write_unary.py
 ```
-* Currently, you can install our package from GitHub.
+* Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
+sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
 
 #### Modules
 Autoiff has just one module: autodiff.py. It contains the DualNumber class and all its accesories.
@@ -115,6 +127,29 @@ The autodiff package is dead simple: there is a single module (`autodiff`) and a
 Any `DualNumber` has two components: a value and a dictionary of derivatives. The value is the real-number result of whatever computation returned this dual number. The derivatives are a dictionary mapping variable names to real numbers, for instance `{'x':3, 'y':0.2}`. This would mean that the computation that produced this dual number depends on original inputs named x and y (and no others) and the derivative in the x direction is 3, while the derivative in the y direction is 1/5. Importantly, dual numbers don't care how they were produced, and can be the result of arbitrarially complex user-defined functions. In fact, (soon) any function that is written in pure python can simply be called on `DualNumber` inputs to get the derivatives at those input values.
 
 Dual numbers work by simply updating the present derivatives in each direction at the same time a new value is computed. For example, the product rule: $\nabla xy = x\nabla y + y\nabla x$ says "to make the output's derivatives: take the derivatives stored in y and multiply them by x's value, then add the derivatives stored in x multiplied by y's value". 
+
+Autodiff has the following dependencies built-in:
+  -math
+  -numbers
+  -defaultdict
+  
+## "autodiff" Class Methods:
+- We overload common operators such as `__add__`, `__sub__`, `__mul__`, and `__truediv__` and their commutative pairs `__radd__`, `__rsub__`, `__rmul__`, and `__rtruediv__`.
+    - The basic rules for derivatives of multiplication and division are applied:
+    $$\frac{d[u(x)\cdot v(x)]}{dx}=u'(x)\cdot v(x)+u(x)\cdot v'(x)$$
+    $$\frac{d\left[\frac{u(x)}{v(x)}\right]}{dx}=\frac{u'(x)\cdot v(x)-u(x)\cdot v'(x)}{v^2(x)}$$
+- We overload unary operator `__neg__`
+- We also overload `__pow__` and `__rpow__`. We implement them as the general form below:
+    $$f(x)=\left[u(x)\right]^{v(x)}$$
+
+    - Therefore when we implement the derivatives, including the very special case such as $y=x^x$, the following chain rule applies:
+$$\frac{df(x)}{dx}=\frac{d\left[u(x)\right]^{v(x)}}{dx}=v(x)\left[u(x)\right]^{v(x)-1}\cdot u'(x)+\left[u(x)\right]^{v(x)}\cdot ln(u(x))\cdot v'(x)$$
+    - The above basically covers most of the powers/ roots/ exponential functions, such as:
+        - $y=x^{2.6}$
+        - $y=\sqrt[3]{x^2}$
+        - $y=2^x-3x^5$
+        - One special Case is $y = \sqrt{u(x)}$. We implement it as one of the elementary functions for convenience.
+        - Another special case is exponential function with natural base $y=e^x$. We also implement it separately for convenience purpose.
 
 ## Extensions
 The following are coming to autodiff very sooon.
