@@ -97,6 +97,8 @@ cs207-FinalProject/
 		test_binary_functions.py
 		test_unary_functions.py
 		write_unary.py
+	images/
+		*Contains images used in README*
 ```
 * Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
 sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
