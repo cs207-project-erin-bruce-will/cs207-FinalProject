@@ -137,11 +137,10 @@ Autodiff has the following dependencies built-in:
 - We overload common operators such as `__add__`, `__sub__`, `__mul__`, and `__truediv__` and their commutative pairs `__radd__`, `__rsub__`, `__rmul__`, and `__rtruediv__`.
     - The basic rules for derivatives of multiplication and division are applied:
     ![Image1](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/images/Equation1.JPG "Equations1")
-    $$\frac{d[u(x)\cdot v(x)]}{dx}=u'(x)\cdot v(x)+u(x)\cdot v'(x)$$
-    $$\frac{d\left[\frac{u(x)}{v(x)}\right]}{dx}=\frac{u'(x)\cdot v(x)-u(x)\cdot v'(x)}{v^2(x)}$$
+  
 - We overload unary operator `__neg__`
 - We also overload `__pow__` and `__rpow__`. We implement them as the general form below:
-    $$f(x)=\left[u(x)\right]^{v(x)}$$
+    ![Image2](images/Equation2.JPG "Equation2")
 
     - Therefore when we implement the derivatives, including the very special case such as $y=x^x$, the following chain rule applies:
 $$\frac{df(x)}{dx}=\frac{d\left[u(x)\right]^{v(x)}}{dx}=v(x)\left[u(x)\right]^{v(x)-1}\cdot u'(x)+\left[u(x)\right]^{v(x)}\cdot ln(u(x))\cdot v'(x)$$
