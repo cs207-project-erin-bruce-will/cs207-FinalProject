@@ -17,7 +17,7 @@ test_tuples = [
 ]
 
 preamble = """import pytest
-import autodiff as ad
+import code.autodiff as ad
 import math
 
 @pytest.fixture
