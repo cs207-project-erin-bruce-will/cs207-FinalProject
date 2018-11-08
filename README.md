@@ -74,7 +74,8 @@ Dual numbers augment the algebra of real numbers by adding a new component to ea
   
 ## Software organization
 Autodiff is organized as follows:
-    ```
+
+```
 cs207-FinalProject/
              README.md (The current user's guide)
 			 various hooks (travis.yml and so on)
@@ -110,7 +111,7 @@ The autodiff package is dead simple: there is a single module (`autodiff`) and a
 
 Any `DualNumber` has two components: a value and a dictionary of derivatives. The value is the real-number result of whatever computation returned this dual number. The derivatives are a dictionary mapping variable names to real numbers, for instance `{'x':3, 'y':0.2}`. This would mean that the computation that produced this dual number depends on original inputs named x and y (and no others) and the derivative in the x direction is 3, while the derivative in the y direction is 1/5. Importantly, dual numbers don't care how they were produced, and can be the result of arbitrarially complex user-defined functions. In fact, (soon) any function that is written in pure python can simply be called on `DualNumber` inputs to get the derivatives at those input values.
 
-Dual numbers work by simply updating the present derivatives in each direction at the same time a new value is computed. For example, the product rule: $\nabla xy = x\nabla y + y\nabla x$ says "to make the output's derivatives, take the derivatives stored in y and multiply them by x's value, then add the derivatives stored in x multiplied by y's value". 
+Dual numbers work by simply updating the present derivatives in each direction at the same time a new value is computed. For example, the product rule: $\nabla xy = x\nabla y + y\nabla x$ says "to make the output's derivatives: take the derivatives stored in y and multiply them by x's value, then add the derivatives stored in x multiplied by y's value". 
 
 #### Extensions
 The following are coming to autodiff very sooon.
