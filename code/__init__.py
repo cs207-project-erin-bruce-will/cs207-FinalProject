@@ -1,9 +1,9 @@
 # __init.py__
 
-from autodiff import autodiff
+#from autodiff import autodiff
 
-from code import autodiff
-from code import integration_test
-from code import test_binary_functions
-from code import test_unary_functions
-from code import write_unary_functions
+from autodiff import *
+from integration_test import *
+from test_binary_functions import *
+from test_unary_functions import *
+from write_unary_functions import *
