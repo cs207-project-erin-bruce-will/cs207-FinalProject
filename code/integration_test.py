@@ -23,7 +23,7 @@ d = -2.75
 e = 4
 
 def test0(x):
-	output = e*x + c
+	output = e*x+c
 	assert output.value == 4*2+3
 	assert output.derivatives['x'] == 4
 
@@ -58,7 +58,7 @@ def test6(x):
 	assert output.derivatives['x'] == -0.6334281233912664
 
 def test7(x):
-	output = ad.log(ad.arccos(math.e**(-3/x)),x**(1/3))
+	output = ad.log(ad.arccos(ad.exp(-3/x)),x**(1/3))
 	assert output.value == 1.2853017513220446
 	assert output.derivatives['x'] == -1.47926913780827
 	
