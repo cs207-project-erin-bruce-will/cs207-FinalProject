@@ -33,13 +33,13 @@ Autodiff will be available via pip soon.
 Using autodiff is very simple:
 ```python
 import sys
-sys.path.insert("C:/Users/Will/cs207-FinalProject/")
+sys.path.insert(0, "C:/Users/erina/cs207-FinalProject/")
 import autodiff as ad
 
 def f(a,b):
-	return a/b*ad.sin(a*b)
+    return a/b*ad.sin(a*b)
 
-out = f(DualNumber('x',2),DualNumber('y',3)))
+out = f(ad.DualNumber('x',2),ad.DualNumber('y',3))
 
 out.value
 -0.416146837
