@@ -7,7 +7,7 @@ import math
 
 @pytest.fixture
 def x():
-	import ourProject.autodiff
+	from ourProject.autodiff import DualNumber
 	return DualNumber('x',2)
 
 @pytest.fixture
