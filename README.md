@@ -87,12 +87,11 @@ cs207-FinalProject/
 	images/
 		*Images used in README*
 ```
-* Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (
+* Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path and import as normal.
 ```
 import sys
 sys.path.insert(0, '/path_to_repo/')
 ```
-) and import as normal. 
 
 #### Modules
 Autoiff has just one module: autodiff.py. It contains the DualNumber class and all its accesories.
