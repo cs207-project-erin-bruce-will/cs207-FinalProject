@@ -74,13 +74,13 @@ Autodiff is organized as follows:
 
 ```
 cs207-FinalProject/
-		README.md (The current user's guide)
+	README.md (The current user's guide)
 	__init.py__
 	Requirements.txt
 	autodiff.py (The key class and functions)
 	*various hooks for pytest and travis*
 	docs/
-			Historic READMEs
+		Historic READMEs
 		demo.py (a runnable demonstration of autodiff)
 	tests/
 		*Various unit and integration tests*
