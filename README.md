@@ -121,7 +121,7 @@ sys.path.insert(0, '/path_to_autodiff/')
 import autodiff as ad
 ```
 
-That's it! Note that editing sys.path is undone when you close python so removing autodiff from your system just requires you to delete the autodiff folder. However, you must write carefully if you want your code to be portable: a user may not have autodiff's repo saved under the same path as you do. Consider
+That's it! Note that editing sys.path is undone when you close python so removing autodiff from your system just requires you to delete the autodiff folder. However, you must write carefully if you want your code to be portable: a user may not have autodiff's repo saved under the same path as you do.
 
 	  
 ## Implementation details
