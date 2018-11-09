@@ -91,7 +91,8 @@ cs207-FinalProject/
 ```
 import sys
 sys.path.insert(0, '/path_to_repo/')
-```) and import as normal. 
+```
+) and import as normal. 
 
 #### Modules
 Autoiff has just one module: autodiff.py. It contains the DualNumber class and all its accesories.
