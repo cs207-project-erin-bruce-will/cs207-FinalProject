@@ -1,6 +1,0 @@
-# Requirements
-
-math >= 3.x
-numbers >= 3.x
-collections.defaultdict >= 3.x
-pytest == 3.x.y
