@@ -74,24 +74,24 @@ Autodiff is organized as follows:
 
 ```
 cs207-FinalProject/
-		README.md (The current user's guide)
+	README.md (The current user's guide)
 	__init.py__
 	Requirements.txt
 	autodiff.py (The key class and functions)
 	*various hooks for pytest and travis*
 	docs/
-			Historic READMEs
+		Historic READMEs
 		demo.py (a runnable demonstration of autodiff)
 	tests/
 		*Various unit and integration tests*
 	images/
 		*Images used in README*
 ```
-* Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (
+* Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path and import as normal.
 ```
 import sys
 sys.path.insert(0, '/path_to_repo/')
-```) and import as normal. 
+```
 
 #### Modules
 Autoiff has just one module: autodiff.py. It contains the DualNumber class and all its accesories.
@@ -121,7 +121,7 @@ sys.path.insert(0, '/path_to_autodiff/')
 import autodiff as ad
 ```
 
-That's it! Note that editing sys.path is undone when you close python so removing autodiff from your system just requires you to delete the autodiff folder. However, you must write carefully if you want your code to be portable: a user may not have autodiff's repo saved under the same path as you do. Consider
+That's it! Note that editing sys.path is undone when you close python so removing autodiff from your system just requires you to delete the autodiff folder. However, you must write carefully if you want your code to be portable: a user may not have autodiff's repo saved under the same path as you do.
 
 	  
 ## Implementation details
