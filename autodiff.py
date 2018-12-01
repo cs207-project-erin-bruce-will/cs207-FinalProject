@@ -1,40 +1,95 @@
 from collections import defaultdict
 import numbers
+import numpy
 import math
 
-# TODO: powers/roots/exponential
+# TODO: set the level of input checking in the fromdict method
+# TODO: deprecate emptydual()
+# TODO: forget making empty duals. Make the value and promote it, then set derivatives.
+#       this plays better with shape, so that we always give back something of type matching the stored value
+#       instead of actual derivatives having .shape and fake ones being 0
 class DualNumber():
-    def __init__(self, name, value, derivatives=None):
+    def __init__(self, name, value):
         # ideally, we should block users from using the derivtives interface. May require separate classes
-        """Forms a DualNumber object.
+        """Declare a dual number variable
         
         Keyword arguments:
-            name -- if desired, otherwise enter None
-            value -- real value
-            derivatives -- derivative(s) with respect to a variable in the format {'variable':value,...} (default = None)
+            name -- a sting giving the name of the variable, e.g. 'x'
+            value -- the value of the variable    
         """
-        self.value = value
-        if name is not None:
+        
+        
+        if isinstance(value,numbers.Number):
+            self.value = value
             self.derivatives = defaultdict(float)
-            self.derivatives[name] = 1
+            if not isinstance(name,str):
+                raise TypeError("name for input must be a string (when value is a single number)")
+            self.derivatives[name]=1
+        elif isinstance(value, numpy.ndarray):
+            self.value = value
+            self.derivatives = defaultdict(self.numpy_closure(value.shape))
+            #TODO: mode that accesses each element of name to set names
+            #TODO: checking that name doesn't include [] already?
+            position_list = numpy.unravel_index(range(value.size),value.shape)
+            for cur_index in range(value.size):
+                
+                indices = [dim[cur_index] for dim in position_list]
+                
+                der = numpy.zeros(value.shape)
+                der[tuple(indices)] = 1
+                
+                extended_name = name+repr(indices)
+                
+                self.derivatives[extended_name] = der
         else:
-            self.derivatives = derivatives
+            raise TypeError("Couldn't convert input of type {}".format(type(value)))
+    
             
     @classmethod
     def emptyDual(cls):
         """
         @classmethod to establish an empty DualNumber object.
         """
-        return cls(None,0,defaultdict(float))
+        output = DualNumber('',0)
+        output.derivatives = defaultdict(float)
+        return output
+    
+    @staticmethod
+    def numpy_closure(shape):
+        def inner_func():
+            return numpy.zeros(shape)
+        return inner_func
         
     @classmethod
     def promote(cls, other):
         """
         @classmethod to promote DualNumber object.
         """
+        # if already a dual number, just return it
+        if isinstance(other, DualNumber):
+            return other
+        
+        output = DualNumber('',0) # build a skeleton we'll overwrite
         if isinstance(other,numbers.Number):
-            other = cls(None,other,defaultdict(float))
-        return other
+            output.value = other
+            output.derivatives = defaultdict(float)
+        elif isinstance(other, numpy.ndarray):
+            output.value = other
+            output.derivatives = defaultdict(cls.numpy_closure(other.shape))
+        else:
+            raise TypeError("Couldn't promote input of type {}".format(type(other)))
+        return output
+    
+    @classmethod
+    def _from_dict(cls, val, deriv):
+        """
+        @classmethod explicitly create the components of a dual number.
+        """
+        output = cls.promote(val)
+        output.val = cls.__prep_value(val)
+        for k,v in deriv.items():
+            output.derivatives[k]=cls._prep_value(val)
+        return output
     
     def __add__(self, other):
         """Adds DualNumber object to a value or another DualNumber, and returns DualNumber object with updated values and derivatives."""
