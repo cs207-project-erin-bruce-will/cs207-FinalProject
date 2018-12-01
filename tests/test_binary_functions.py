@@ -6,13 +6,13 @@ import math
 @pytest.fixture
 def a():
     from autodiff import DualNumber
-    a = DualNumber(None,3.5,{'y':4,'x':3})
+    a = DualNumber._from_dict(3.5,{'y':4,'x':3})
     return a
 
 @pytest.fixture
 def b():
     from autodiff import DualNumber
-    b = DualNumber(None,2,{'x':1.2, 'y':9.5, 'z':5})
+    b = DualNumber._from_dict(2,{'x':1.2, 'y':9.5, 'z':5})
     return b
 
 @pytest.fixture

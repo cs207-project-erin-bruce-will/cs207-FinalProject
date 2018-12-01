@@ -86,9 +86,8 @@ class DualNumber():
         @classmethod explicitly create the components of a dual number.
         """
         output = cls.promote(val)
-        output.val = cls.__prep_value(val)
         for k,v in deriv.items():
-            output.derivatives[k]=cls._prep_value(val)
+            output.derivatives[k]=v
         return output
     
     def __add__(self, other):
