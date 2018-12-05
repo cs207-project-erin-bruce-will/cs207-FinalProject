@@ -2,12 +2,10 @@ from collections import defaultdict
 import numbers
 import numpy
 import math
+import warnings
 
 # TODO: set the level of input checking in the fromdict method
-# TODO: deprecate emptydual()
-# TODO: forget making empty duals. Make the value and promote it, then set derivatives.
-#       this plays better with shape, so that we always give back something of type matching the stored value
-#       instead of actual derivatives having .shape and fake ones being 0
+
 class DualNumber():
     """This class contains the functions that return dual numbers."""
     
@@ -27,19 +25,12 @@ class DualNumber():
             
         EXAMPLES:
         =======
-        >>>DualNumber('x', 4)
-        <autodiff.DualNumber at 0x173223366d8>
-        
-        >>>DualNumber('x',4).value
+       
+        >>> DualNumber('x',4).value
         4
         
-        >>>DualNumber('x',4).derivatives
-        defaultdict(float, {'x': 1})
-        
-        SHOULD I DELETE THIS???
-        Keyword arguments:
-            name -- a sting giving the name of the variable, e.g. 'x'
-            value -- the value of the variable    
+        >>> DualNumber('x',4).derivatives
+        defaultdict(<class 'float'>, {'x': 1})
         """
         
         if isinstance(value,numbers.Number):
@@ -68,20 +59,11 @@ class DualNumber():
         else:
             raise TypeError("Couldn't convert input of type {}".format(type(value)))
     
-            
-    @classmethod
-    def emptyDual(cls):
-        """
-        @classmethod to establish an empty DualNumber object.
-        """
-        output = DualNumber('',0)
-        output.derivatives = defaultdict(float)
-        return output
-    
+               
     @staticmethod
     def numpy_closure(shape):
         """
-        @staticmethod to WHAT?
+        @staticmethod used to create a function that returns a numpy array of a given shape.
         """
         def inner_func():
             return numpy.zeros(shape)
@@ -120,9 +102,9 @@ class DualNumber():
     def __add__(self, other):
         """Adds DualNumber object to a value or another DualNumber, and returns DualNumber object with updated values and derivatives."""
         other = self.promote(other)
-        output=self.emptyDual()
         
-        output.value = self.value + other.value
+        output = self.promote(self.value + other.value)
+                
         for k1 in self.derivatives:
             output.derivatives[k1] += self.derivatives[k1]
         for k2 in other.derivatives:
@@ -135,9 +117,9 @@ class DualNumber():
     def __sub__(self, other):
         """Subtracts DualNumber object from a value or another DualNumber, and returns a new DualNumber object."""
         other = self.promote(other)
-        output = self.emptyDual()
         
-        output.value = self.value - other.value
+        output = self.promote(self.value - other.value)
+        
         for k1 in self.derivatives:
             output.derivatives[k1] += self.derivatives[k1]
         for k2 in other.derivatives:
@@ -148,9 +130,9 @@ class DualNumber():
     def __rsub__(self, other):
         """Subtracts DualNumber object from a value or another DualNumber, and returns a new DualNumber object."""
         other = self.promote(other)
-        output = self.emptyDual()
         
-        output.value = other.value - self.value
+        output = self.promote(other.value - self.value)
+        
         for k1 in self.derivatives:
             output.derivatives[k1] += -self.derivatives[k1]
         for k2 in other.derivatives:
@@ -161,9 +143,8 @@ class DualNumber():
     def __mul__(self, other):
         """Multiplies DualNumber object with a value or another DualNumber, and returns a new DualNumber object."""
         other = self.promote(other)
-        output=self.emptyDual()
         
-        output.value = self.value*other.value
+        output = self.promote(self.value*other.value)
         
         # real part of first parent distributes
         for k2 in other.derivatives:
@@ -180,9 +161,8 @@ class DualNumber():
     def __truediv__(self, other):
         """Divides DualNumber object by a value or another DualNumber, and returns a new DualNumber object."""
         other = self.promote(other)
-        output = self.emptyDual()
         
-        output.value = self.value/other.value
+        output = self.promote(self.value/other.value)
 
         # real part of first parent distributes
         for k2 in other.derivatives:
@@ -197,9 +177,8 @@ class DualNumber():
     def __rtruediv__(self, other):
         """Divides DualNumber object by a value or another DualNumber, and returns a new DualNumber object."""
         other = self.promote(other)
-        output = self.emptyDual()
         
-        output.value = other.value/self.value
+        output = self.promote(other.value/self.value)
 
         # real part of first parent distributes
         for k2 in other.derivatives:
@@ -213,9 +192,8 @@ class DualNumber():
     
     def __neg__(self):
         """Makes DualNumber object negative, and returns a new DualNumber object reflecting the change."""
-        output = self.emptyDual()
+        output = self.promote(-self.value)
         
-        output.value = -self.value
         for k1 in self.derivatives:
             output.derivatives[k1] += -self.derivatives[k1]
 
@@ -226,9 +204,8 @@ class DualNumber():
     def __pow__(self, other): #self^other => self = u(x) and other = v(x)
         """Raises DualNumber object to specificed power, and returns a new DualNumber object reflecting the change."""
         other = self.promote(other)
-        output = self.emptyDual()
         
-        output.value = self.value**other.value
+        output = self.promote(self.value**other.value)
 
         # real part of first parent distributes
         for k2 in other.derivatives:
@@ -243,9 +220,8 @@ class DualNumber():
     def __rpow__(self, other):
         """Raises DualNumber object to specificed power, and returns a new DualNumber object reflecting the change."""
         other = self.promote(other)
-        output = self.emptyDual()
         
-        output.value = other.value**self.value
+        output = self.promote(other.value**self.value)
 
         # real part of first parent distributes
         for k2 in other.derivatives:
@@ -264,8 +240,12 @@ class DualNumber():
         It does note check if the derivatives are equal.
         """
         if isinstance(other, DualNumber):
+            if self.value == other.value:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value == other.value
         else:
+            if self.value == other:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value == other
         
     def __le__(self, other):
@@ -275,8 +255,12 @@ class DualNumber():
         It does note check if the derivatives are equal.
         """
         if isinstance(other, DualNumber):
+            if self.value == other.value:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value <= other.value
         else:
+            if self.value == other:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value <= other
         
     def __lt__(self, other):
@@ -286,8 +270,12 @@ class DualNumber():
         It does note check if the derivatives are equal.
         """
         if isinstance(other, DualNumber):
+            if self.value == other.value:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value < other.value
         else:
+            if self.value == other:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value < other
     
     def __ge__(self, other):
@@ -297,9 +285,13 @@ class DualNumber():
         It does note check if the derivatives are equal.
         """
         if isinstance(other, DualNumber):
+            if self.value == other.value:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value >= other.value
         else:
-            return self.value >=  other
+            if self.value == other:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
+            return self.value >= other
             
     def __gt__(self, other):
         """Checks if DualNumber object is greater than a specific value.
@@ -308,8 +300,12 @@ class DualNumber():
         It does note check if the derivatives are equal.
         """
         if isinstance(other, DualNumber):
+            if self.value == other.value:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value > other.value
         else:
+            if self.value == other:
+                warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value > other
         
 
@@ -321,7 +317,7 @@ def sqrt(self): #square root function overload
     """
     Takes the square root of a DualNumber object and returns DualNumber object with updated value and derivatives.
     """
-    output = self.emptyDual()
+
     output = self**0.5
 
     return output
@@ -330,7 +326,7 @@ def exp(self): #natural exponential
     """
     Raises DualNumber object to a specified value and returns a DualNumber object with updated value and derivatives.
     """
-    output = self.emptyDual()
+    
     base = math.exp(1)
     output = base**self
 
@@ -340,8 +336,7 @@ def ln(self): #natural log
     """
     Takes the natural log of DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    output = self.emptyDual()
-    output.value = math.log(self.value)
+    output= self.promote(math.log(self.value))
         
     # real part of the second parent distributes
     for k1 in self.derivatives:
@@ -369,8 +364,7 @@ def sin(self):
     Takes the sine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
-    output.value = math.sin(self.value)
+    output = self.promote(math.sin(self.value))
         
     # real part of the first parent distributes
     for k1 in self.derivatives:
@@ -384,8 +378,7 @@ def cos(self):
     Takes the cosine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
-    output.value = math.cos(self.value)
+    output = self.promote(math.cos(self.value))
         
     # real part of the first parent distributes
     for k1 in self.derivatives:
@@ -399,7 +392,6 @@ def tan(self): #need to check 0 in denominator
     Takes the tangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = sin(self)/cos(self)
             
     return output
@@ -410,7 +402,6 @@ def cot(self):
     Takes the cotangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = cos(self)/sin(self)
             
     return output
@@ -421,7 +412,6 @@ def sec(self):
     Takes the secant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = 1/cos(self)
             
     return output
@@ -432,7 +422,6 @@ def csc(self):
     Takes the cosecant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = 1/sin(self)
             
     return output
@@ -445,11 +434,10 @@ def arcsin(self): # must make sure self is strictly between -1 and 1, exclusive
     Note: .value will only fall between -1 and 1
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     if self.value<-1 or self.value>1: # out of domain
         raise Exception('The value entering into arcsin function must be strictly within -1 and 1.')
 
-    output.value = math.asin(self.value)
+    output = self.promote(math.asin(self.value))
         
     # real part of the first parent distributes
     for k1 in self.derivatives:
@@ -463,7 +451,6 @@ def arccos(self):
     Takes the inverse cosine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = math.pi/2 - arcsin(self)
         
     return output
@@ -474,7 +461,6 @@ def arctan(self):
     Takes the inverse tangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = arcsin(self/sqrt(1+self**2))
         
     return output
@@ -485,7 +471,6 @@ def arccot(self):
     Takes the inverse cotangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = math.pi/2 - arctan(self)
         
     return output
@@ -496,18 +481,15 @@ def arcsec(self):
     Takes the inverse secant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = arccos(1/self)
         
     return output
-
 
 def arccsc(self):
     """
     Takes the inverse cosecant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.emptyDual()
     output = math.pi/2 - arcsec(self)
         
     return output
