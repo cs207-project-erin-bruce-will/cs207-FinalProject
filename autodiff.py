@@ -9,15 +9,38 @@ import math
 #       this plays better with shape, so that we always give back something of type matching the stored value
 #       instead of actual derivatives having .shape and fake ones being 0
 class DualNumber():
+    """This class contains the functions that return dual numbers."""
+    
     def __init__(self, name, value):
         # ideally, we should block users from using the derivtives interface. May require separate classes
         """Declare a dual number variable
         
+        INPUTS:
+        =======
+        name: a string declaring the name of the variable, ie 'x'
+        value: an integer or float declaring the current value of the variable
+        
+        RETURNS:
+        =======
+        self.DualNumber: object
+            A DualNuber object
+            
+        EXAMPLES:
+        =======
+        >>>DualNumber('x', 4)
+        <autodiff.DualNumber at 0x173223366d8>
+        
+        >>>DualNumber('x',4).value
+        4
+        
+        >>>DualNumber('x',4).derivatives
+        defaultdict(float, {'x': 1})
+        
+        SHOULD I DELETE THIS???
         Keyword arguments:
             name -- a sting giving the name of the variable, e.g. 'x'
             value -- the value of the variable    
         """
-        
         
         if isinstance(value,numbers.Number):
             self.value = value
@@ -25,6 +48,7 @@ class DualNumber():
             if not isinstance(name,str):
                 raise TypeError("name for input must be a string (when value is a single number)")
             self.derivatives[name]=1
+        
         elif isinstance(value, numpy.ndarray):
             self.value = value
             self.derivatives = defaultdict(self.numpy_closure(value.shape))
@@ -56,6 +80,9 @@ class DualNumber():
     
     @staticmethod
     def numpy_closure(shape):
+        """
+        @staticmethod to WHAT?
+        """
         def inner_func():
             return numpy.zeros(shape)
         return inner_func
