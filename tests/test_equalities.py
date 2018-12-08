@@ -1,26 +1,6 @@
 import pytest
 import autodiff as ad
 
-@pytest.fixture
-def a():
-    from autodiff import DualNumber
-    a = DualNumber._from_dict(3.5,{'y':4,'x':3})
-    return a
-
-@pytest.fixture
-def b():
-    from autodiff import DualNumber
-    b = DualNumber._from_dict(2,{'x':1.2, 'y':9.5, 'z':5})
-    return b
-
-@pytest.fixture
-def s():
-    return 4.2
-	
-@pytest.fixture
-def s2():
-    return 3.1
-
 ###
 # Equality ==
 ###
@@ -123,7 +103,7 @@ def test__ge__dual_true(a):
     result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) >= ad.DualNumber._from_dict(1.5,{'y':4,'x':3})
     assert result == True
     
- ###
+###
 # Greater Than 
 ###   
     
