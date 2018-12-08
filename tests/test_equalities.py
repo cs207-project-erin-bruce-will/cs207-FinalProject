@@ -1,9 +1,5 @@
 import pytest
 import autodiff as ad
-import math
-import warnings
-
-#TODO: Test the warnings?
 
 @pytest.fixture
 def a():
