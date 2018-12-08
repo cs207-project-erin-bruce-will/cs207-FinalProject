@@ -33,12 +33,14 @@ def test__eq__false():
     assert result == False
     
 def test__eq__true():
-    result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) == 3.5
-    assert result == True
+    with pytest.warns(UserWarning):
+        result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) == 3.5
+        assert result == True
     
 def test__eq__dual():
-    result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) == ad.DualNumber._from_dict(3.5,{'x':3})
-    assert result == True
+    with pytest.warns(UserWarning):
+        result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) == ad.DualNumber._from_dict(3.5,{'x':3})
+        assert result == True
     
 def test__eq__dual_false():
     result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) == ad.DualNumber._from_dict(1.5,{'y':4,'x':3})
@@ -52,12 +54,14 @@ def test__ne__true():
     assert result == True
     
 def test__ne__false():
-    result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) !=3.5
-    assert result == False
+    with pytest.warns(UserWarning):
+        result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) !=3.5
+        assert result == False
     
 def test__ne__dual_false():
-    result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) != ad.DualNumber._from_dict(3.5,{'x':3})
-    assert result == False   
+    with pytest.warns(UserWarning):
+        result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) != ad.DualNumber._from_dict(3.5,{'x':3})
+        assert result == False   
     
 def test__ne__dual_true():
     result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) != ad.DualNumber._from_dict(1.5,{'y':4,'x':3})
@@ -75,8 +79,9 @@ def test__le__true(a):
     assert result == True
     
 def test__le__dual(a):
-    result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) <= ad.DualNumber._from_dict(3.5,{'x':3})
-    assert result == True   
+    with pytest.warns(UserWarning):
+        result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) <= ad.DualNumber._from_dict(3.5,{'x':3})
+        assert result == True   
     
 def test__le__dual_false(a):
     result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) <= ad.DualNumber._from_dict(1.5,{'y':4,'x':3})
@@ -94,8 +99,9 @@ def test__lt__true(a):
     assert result == True
     
 def test__lt__dual(a):
-    result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) < ad.DualNumber._from_dict(3.5,{'x':3})
-    assert result == False   
+    with pytest.warns(UserWarning):
+        result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) < ad.DualNumber._from_dict(3.5,{'x':3})
+        assert result == False   
     
 def test__lt__dual_false(a):
     result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) <= ad.DualNumber._from_dict(1.5,{'y':4,'x':3})
@@ -113,8 +119,9 @@ def test__ge__false(a):
     assert result == False
     
 def test__ge__dual(a):
-    result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) >= ad.DualNumber._from_dict(3.5,{'x':3})
-    assert result == True   
+    with pytest.warns(UserWarning):
+        result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) >= ad.DualNumber._from_dict(3.5,{'x':3})
+        assert result == True   
     
 def test__ge__dual_true(a):
     result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) >= ad.DualNumber._from_dict(1.5,{'y':4,'x':3})
@@ -133,8 +140,9 @@ def test__gt__false(a):
     assert result == False
     
 def test__gt__dual(a):
-    result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) > ad.DualNumber._from_dict(3.5,{'x':3})
-    assert result == False
+    with pytest.warns(UserWarning):
+        result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) > ad.DualNumber._from_dict(3.5,{'x':3})
+        assert result == False
     
 def test__gt__dual_true(a):
     result = ad.DualNumber._from_dict(3.5,{'y':4,'x':3}) > ad.DualNumber._from_dict(1.5,{'y':4,'x':3})
