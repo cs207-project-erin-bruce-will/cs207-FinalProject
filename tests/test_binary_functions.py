@@ -1,7 +1,6 @@
 import pytest
 import autodiff as ad
 import math
-#TODO: logs, exponents, and unitary functions
 
 @pytest.fixture
 def a():
