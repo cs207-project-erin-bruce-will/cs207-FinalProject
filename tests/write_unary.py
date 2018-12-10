@@ -2,18 +2,24 @@
 
 # name, value computation, derivative computation, argument
 test_tuples = [
-    ("sin",        "math.sin(x)",         "math.cos(x)",                             ""),
-    ("cos",     "math.cos(x)",         "-math.sin(x)",                         ""),
-    ("tan",     "math.tan(x)",         "1/(math.cos(x)**2)",                     ""),
-    ("cot",     "1/math.tan(x)",     "-1/(math.sin(x)**2)",                     ""),
-    ("sec",     "1/math.cos(x)",     "1/math.cos(x)*math.tan(x)",             ""),
-    ("csc",     "1/math.sin(x)",     "-1/math.sin(x)*1/math.tan(x)",         ""),
-    ("arcsin",     "math.asin(x)",     "1/math.sqrt(1-x**2)",                     ""),
-    ("arccos",     "math.acos(x)",     "-1/math.sqrt(1-x**2)",                 ""),
-    ("arctan",     "math.atan(x)",     "1/(1+x**2)",                             ""),
-    ("arccot",     "math.pi/2 - math.atan(x)",     "-1/(1+x**2)",                     ""),
-    ("arcsec",     "math.acos(1/x)",     "1/(abs(x)*math.sqrt(x**2-1))",     "inv"),
-    ("arccsc",     "math.asin(1/x)",     "-1/(abs(x)*math.sqrt(x**2-1))",     "inv")
+    ("sin",        "math.sin(x)",                "math.cos(x)",                      ""),
+    ("cos",        "math.cos(x)",                "-math.sin(x)",                     ""),
+    ("tan",        "math.tan(x)",                "1/(math.cos(x)**2)",               ""),
+    ("cot",        "1/math.tan(x)",              "-1/(math.sin(x)**2)",              ""),
+    ("sec",        "1/math.cos(x)",              "1/math.cos(x)*math.tan(x)",        ""),
+    ("csc",        "1/math.sin(x)",              "-1/math.sin(x)*1/math.tan(x)",     ""),
+    ("arcsin",     "math.asin(x)",               "1/math.sqrt(1-x**2)",              ""),
+    ("arccos",     "math.acos(x)",               "-1/math.sqrt(1-x**2)",             ""),
+    ("arctan",     "math.atan(x)",               "1/(1+x**2)",                       ""),
+    ("arccot",     "math.pi/2 - math.atan(x)",   "-1/(1+x**2)",                      ""),
+    ("arcsec",     "math.acos(1/x)",             "1/(abs(x)*math.sqrt(x**2-1))",     "inv"),
+    ("arccsc",     "math.asin(1/x)",             "-1/(abs(x)*math.sqrt(x**2-1))",    "inv"),
+    ("sinh",       "math.sinh(x)",               "math.cosh(x)",                     ""),
+    ("cosh",       "math.cosh(x)",               "math.sinh(x)",                     ""),
+    ("tanh",       "math.tanh(x)",               "1/(math.cosh(x)**2)",              ""),
+    ("coth",       "1/math.tanh(x)",             "-1/(math.sinh(x)**2)",             ""),
+    ("sech",       "1/math.cosh(x)",             "-1/math.cosh(x)*math.tanh(x)",       ""),
+    ("csch",       "1/math.sinh(x)",             "-1/math.sinh(x)*1/math.tanh(x)",    "")
 ]
 
 preamble = """import pytest

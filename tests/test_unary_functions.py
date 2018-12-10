@@ -659,3 +659,303 @@ def test_arccsc_dm(dminv):
         assert output.derivatives['z'][i] == pytest.approx(coef*dminv.derivatives['z'][i])
 
     
+
+###
+# sinh
+###
+def test_sinh_s(s):
+    def value(x):
+        return math.sinh(x)
+    output = ad.sinh(s)
+    assert output.value == pytest.approx(value(s))
+    assert output.derivatives == {}
+
+def test_sinh_d(b):
+    def value(x):
+        return math.sinh(x)
+    def der(x):
+        return math.cosh(x)
+    
+    output = ad.sinh(b)
+    assert output.value == pytest.approx(value(b.value))
+    coef = der(b.value)
+    assert output.derivatives == pytest.approx({'x':coef*1.2, 'y':coef*9.5, 'z':coef*5})
+    
+def test_sinh_no_change(b):
+    b_d = b.derivatives
+    output = ad.sinh(b)
+    assert b_d == b.derivatives
+    
+def test_sinh_sm(m):
+    def value(x):
+        return math.sinh(x)
+    output = ad.sinh(m)
+    for i in range(len(m)):
+        assert output.value[i] == pytest.approx(value(m[i]))
+    assert output.derivatives == {}
+        
+def test_sinh_dm(dm):
+    def value(x):
+        return math.sinh(x)
+    def der(x):
+        return math.cosh(x)
+   
+    output = ad.sinh(dm)
+    for i in range(len(dm.value)):
+        assert output.value[i] == pytest.approx(value(dm.value[i]))
+        coef = der(dm.value[i])
+        assert output.derivatives['x'][i] == pytest.approx(coef*dm.derivatives['x'][i])
+        assert output.derivatives['y'][i] == pytest.approx(coef*dm.derivatives['y'][i])
+        assert output.derivatives['z'][i] == pytest.approx(coef*dm.derivatives['z'][i])
+
+    
+
+###
+# cosh
+###
+def test_cosh_s(s):
+    def value(x):
+        return math.cosh(x)
+    output = ad.cosh(s)
+    assert output.value == pytest.approx(value(s))
+    assert output.derivatives == {}
+
+def test_cosh_d(b):
+    def value(x):
+        return math.cosh(x)
+    def der(x):
+        return math.sinh(x)
+    
+    output = ad.cosh(b)
+    assert output.value == pytest.approx(value(b.value))
+    coef = der(b.value)
+    assert output.derivatives == pytest.approx({'x':coef*1.2, 'y':coef*9.5, 'z':coef*5})
+    
+def test_cosh_no_change(b):
+    b_d = b.derivatives
+    output = ad.cosh(b)
+    assert b_d == b.derivatives
+    
+def test_cosh_sm(m):
+    def value(x):
+        return math.cosh(x)
+    output = ad.cosh(m)
+    for i in range(len(m)):
+        assert output.value[i] == pytest.approx(value(m[i]))
+    assert output.derivatives == {}
+        
+def test_cosh_dm(dm):
+    def value(x):
+        return math.cosh(x)
+    def der(x):
+        return math.sinh(x)
+   
+    output = ad.cosh(dm)
+    for i in range(len(dm.value)):
+        assert output.value[i] == pytest.approx(value(dm.value[i]))
+        coef = der(dm.value[i])
+        assert output.derivatives['x'][i] == pytest.approx(coef*dm.derivatives['x'][i])
+        assert output.derivatives['y'][i] == pytest.approx(coef*dm.derivatives['y'][i])
+        assert output.derivatives['z'][i] == pytest.approx(coef*dm.derivatives['z'][i])
+
+    
+
+###
+# tanh
+###
+def test_tanh_s(s):
+    def value(x):
+        return math.tanh(x)
+    output = ad.tanh(s)
+    assert output.value == pytest.approx(value(s))
+    assert output.derivatives == {}
+
+def test_tanh_d(b):
+    def value(x):
+        return math.tanh(x)
+    def der(x):
+        return 1/(math.cosh(x)**2)
+    
+    output = ad.tanh(b)
+    assert output.value == pytest.approx(value(b.value))
+    coef = der(b.value)
+    assert output.derivatives == pytest.approx({'x':coef*1.2, 'y':coef*9.5, 'z':coef*5})
+    
+def test_tanh_no_change(b):
+    b_d = b.derivatives
+    output = ad.tanh(b)
+    assert b_d == b.derivatives
+    
+def test_tanh_sm(m):
+    def value(x):
+        return math.tanh(x)
+    output = ad.tanh(m)
+    for i in range(len(m)):
+        assert output.value[i] == pytest.approx(value(m[i]))
+    assert output.derivatives == {}
+        
+def test_tanh_dm(dm):
+    def value(x):
+        return math.tanh(x)
+    def der(x):
+        return 1/(math.cosh(x)**2)
+   
+    output = ad.tanh(dm)
+    for i in range(len(dm.value)):
+        assert output.value[i] == pytest.approx(value(dm.value[i]))
+        coef = der(dm.value[i])
+        assert output.derivatives['x'][i] == pytest.approx(coef*dm.derivatives['x'][i])
+        assert output.derivatives['y'][i] == pytest.approx(coef*dm.derivatives['y'][i])
+        assert output.derivatives['z'][i] == pytest.approx(coef*dm.derivatives['z'][i])
+
+    
+
+###
+# coth
+###
+def test_coth_s(s):
+    def value(x):
+        return 1/math.tanh(x)
+    output = ad.coth(s)
+    assert output.value == pytest.approx(value(s))
+    assert output.derivatives == {}
+
+def test_coth_d(b):
+    def value(x):
+        return 1/math.tanh(x)
+    def der(x):
+        return -1/(math.sinh(x)**2)
+    
+    output = ad.coth(b)
+    assert output.value == pytest.approx(value(b.value))
+    coef = der(b.value)
+    assert output.derivatives == pytest.approx({'x':coef*1.2, 'y':coef*9.5, 'z':coef*5})
+    
+def test_coth_no_change(b):
+    b_d = b.derivatives
+    output = ad.coth(b)
+    assert b_d == b.derivatives
+    
+def test_coth_sm(m):
+    def value(x):
+        return 1/math.tanh(x)
+    output = ad.coth(m)
+    for i in range(len(m)):
+        assert output.value[i] == pytest.approx(value(m[i]))
+    assert output.derivatives == {}
+        
+def test_coth_dm(dm):
+    def value(x):
+        return 1/math.tanh(x)
+    def der(x):
+        return -1/(math.sinh(x)**2)
+   
+    output = ad.coth(dm)
+    for i in range(len(dm.value)):
+        assert output.value[i] == pytest.approx(value(dm.value[i]))
+        coef = der(dm.value[i])
+        assert output.derivatives['x'][i] == pytest.approx(coef*dm.derivatives['x'][i])
+        assert output.derivatives['y'][i] == pytest.approx(coef*dm.derivatives['y'][i])
+        assert output.derivatives['z'][i] == pytest.approx(coef*dm.derivatives['z'][i])
+
+    
+
+###
+# sech
+###
+def test_sech_s(s):
+    def value(x):
+        return 1/math.cosh(x)
+    output = ad.sech(s)
+    assert output.value == pytest.approx(value(s))
+    assert output.derivatives == {}
+
+def test_sech_d(b):
+    def value(x):
+        return 1/math.cosh(x)
+    def der(x):
+        return -1/math.cosh(x)*math.tanh(x)
+    
+    output = ad.sech(b)
+    assert output.value == pytest.approx(value(b.value))
+    coef = der(b.value)
+    assert output.derivatives == pytest.approx({'x':coef*1.2, 'y':coef*9.5, 'z':coef*5})
+    
+def test_sech_no_change(b):
+    b_d = b.derivatives
+    output = ad.sech(b)
+    assert b_d == b.derivatives
+    
+def test_sech_sm(m):
+    def value(x):
+        return 1/math.cosh(x)
+    output = ad.sech(m)
+    for i in range(len(m)):
+        assert output.value[i] == pytest.approx(value(m[i]))
+    assert output.derivatives == {}
+        
+def test_sech_dm(dm):
+    def value(x):
+        return 1/math.cosh(x)
+    def der(x):
+        return -1/math.cosh(x)*math.tanh(x)
+   
+    output = ad.sech(dm)
+    for i in range(len(dm.value)):
+        assert output.value[i] == pytest.approx(value(dm.value[i]))
+        coef = der(dm.value[i])
+        assert output.derivatives['x'][i] == pytest.approx(coef*dm.derivatives['x'][i])
+        assert output.derivatives['y'][i] == pytest.approx(coef*dm.derivatives['y'][i])
+        assert output.derivatives['z'][i] == pytest.approx(coef*dm.derivatives['z'][i])
+
+    
+
+###
+# csch
+###
+def test_csch_s(s):
+    def value(x):
+        return 1/math.sinh(x)
+    output = ad.csch(s)
+    assert output.value == pytest.approx(value(s))
+    assert output.derivatives == {}
+
+def test_csch_d(b):
+    def value(x):
+        return 1/math.sinh(x)
+    def der(x):
+        return -1/math.sinh(x)*1/math.tanh(x)
+    
+    output = ad.csch(b)
+    assert output.value == pytest.approx(value(b.value))
+    coef = der(b.value)
+    assert output.derivatives == pytest.approx({'x':coef*1.2, 'y':coef*9.5, 'z':coef*5})
+    
+def test_csch_no_change(b):
+    b_d = b.derivatives
+    output = ad.csch(b)
+    assert b_d == b.derivatives
+    
+def test_csch_sm(m):
+    def value(x):
+        return 1/math.sinh(x)
+    output = ad.csch(m)
+    for i in range(len(m)):
+        assert output.value[i] == pytest.approx(value(m[i]))
+    assert output.derivatives == {}
+        
+def test_csch_dm(dm):
+    def value(x):
+        return 1/math.sinh(x)
+    def der(x):
+        return -1/math.sinh(x)*1/math.tanh(x)
+   
+    output = ad.csch(dm)
+    for i in range(len(dm.value)):
+        assert output.value[i] == pytest.approx(value(dm.value[i]))
+        coef = der(dm.value[i])
+        assert output.derivatives['x'][i] == pytest.approx(coef*dm.derivatives['x'][i])
+        assert output.derivatives['y'][i] == pytest.approx(coef*dm.derivatives['y'][i])
+        assert output.derivatives['z'][i] == pytest.approx(coef*dm.derivatives['z'][i])
+
+    
