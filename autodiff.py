@@ -554,3 +554,14 @@ def logistic(self):
     output = exp(self)/(exp(self)+1)
 
     return output
+
+def T(self):
+    """
+    Takes the transpose of a DualNumber object and returns a DualNumber object with updated value and derivatives.
+    """
+    output= self.promote(np.transpose(self.value))
+    
+    for k1 in self.derivatives:
+        output.derivatives[k1] += np.transpose(self.derivatives[k1])
+
+    return output
