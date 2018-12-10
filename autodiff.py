@@ -490,3 +490,65 @@ def arccsc(self):
         
     return output
 
+def sinh(self):
+    """
+    Takes the hyperbolic sine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
+    """
+    self = DualNumber.promote(self)
+    output = exp(self)/2 - exp(-self)/2
+
+    return output
+
+def cosh(self):
+    """
+    Takes the hyperbolic cosine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
+    """
+    self = DualNumber.promote(self)
+    output = exp(self)/2 + exp(-self)/2
+
+    return output
+
+def tanh(self):
+    """
+    Takes the hyperbolic tangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
+    """
+    self = DualNumber.promote(self)
+    output = sinh(self)/cosh(self)
+
+    return output
+
+def coth(self):
+    """
+    Takes the hyperbolic cotangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
+    """
+    self = DualNumber.promote(self)
+    output = cosh(self)/sinh(self)
+
+    return output
+
+def sech(self):
+    """
+    Takes the hyperbolic secant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
+    """
+    self = DualNumber.promote(self)
+    output = 1/cosh(self)
+
+    return output
+
+def csch(self):
+    """
+    Takes the hyperbolic cosecant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
+    """
+    self = DualNumber.promote(self)
+    output = 1/sinh(self)
+
+    return output
+
+def logistic(self):
+    """
+    Takes the logistic of a DualNumber object and returns a DualNumber object with updated value and derivatives.
+    """
+    self = DualNumber.promote(self)
+    output = exp(self)/(exp(self)+1)
+
+    return output
