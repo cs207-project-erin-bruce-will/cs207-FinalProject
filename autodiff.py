@@ -559,9 +559,20 @@ def T(self):
     """
     Takes the transpose of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    output= self.promote(np.transpose(self.value))
+    output = self.promote(np.transpose(self.value))
     
     for k1 in self.derivatives:
         output.derivatives[k1] += np.transpose(self.derivatives[k1])
+
+    return output
+
+def dot(x, y):
+    x = DualNumber.promote(x)
+    y = DualNumber.promote(y)
+    
+    output = DualNumber.promote(np.dot(x.value, y.value))
+    
+    for k1 in x.derivatives:
+        output.derivatives[k1] += np.dot(x.derivatives[k1],y.derivatives[k1])
 
     return output
