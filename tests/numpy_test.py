@@ -53,6 +53,14 @@ def s():
 def s2():
     return 3.1
 
+###
+# Creation
+###
+def test_creation_arr():
+    x = ad.DualNumber('x',np.array([10,12]))
+    assert np.all(x.value == np.array([10,12]))
+    assert np.all(x.derivatives['x[0]'] == np.array([1,0]))
+    assert np.all(x.derivatives['x[1]'] == np.array([0,1]))
 
 
 ###
