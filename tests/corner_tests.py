@@ -24,14 +24,26 @@ def test_missing_value():
     with pytest.raises(TypeError):
         ad.DualNumber('x')
 
+def test_missing_name_n():
+    with pytest.raises(TypeError):
+        ad.DualNumber('x')
+        
+def test_missing_name_arr():
+    with pytest.raises(TypeError):
+        ad.DualNumber(value=np.array([10,12]))
+
 # bad inputs
 def test_bad_value():
     with pytest.raises(TypeError):
         ad.DualNumber('x',"yes")
 
-def test_bad_name():
+def test_bad_name_n():
     with pytest.raises(TypeError):
         ad.DualNumber(7,20)
+        
+def test_bad_arr():
+    with pytest.raises(TypeError):
+        ad.DualNumber(7,np.array([10,12]))
 
 # value is already a dual number
 def test_dual_value():

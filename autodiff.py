@@ -35,12 +35,14 @@ class DualNumber():
             self.value = value
             self.derivatives = defaultdict(float)
             if not isinstance(name,str):
-                raise TypeError("name for input must be a string (when value is a single number)")
+                raise TypeError("The name for this variable must be a string")
             self.derivatives[name]=1
         
         elif isinstance(value, np.ndarray):
             self.value = value
             self.derivatives = defaultdict(self.np_closure(value.shape))
+            if not isinstance(name,str):
+                raise TypeError("The name for this variable must be a string")
             position_list = np.unravel_index(range(value.size),value.shape)
             for cur_index in range(value.size):
                 
