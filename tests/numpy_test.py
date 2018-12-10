@@ -222,22 +222,22 @@ def test_log_md(m_array,b):
         assert output.derivatives['x'][i] == pytest.approx(m*ma*m_array.derivatives['x'][i]+m*mb*b.derivatives['x'])
         assert output.derivatives['y'][i] == pytest.approx(m*ma*m_array.derivatives['y'][i]+m*mb*b.derivatives['y'])
 
-def test_log_dm(b,n_array):
-    output = ad.log(b,n_array)
-    for i in range(len(m_array.value)):  
-        assert output.value[i] == math.log(b.value,n_array.value[i])
-        m  = 1/math.log(n_array.value[i])**2
-        ma = math.log(n_array.value[i])/b.value
-        mb = -math.log(b.value)/n_array.value[i]
-        assert output.derivatives['x'][i] == pytest.approx(m*ma*b.derivatives['x']+m*mb*n_array.derivatives['x'][i])
-        assert output.derivatives['y'][i] == pytest.approx(m*ma*b.derivatives['y']+m*mb*n_array.derivatives['y'][i])
+def test_log_dm(b,p_array):
+    output = ad.log(b,p_array)
+    for i in range(len(p_array.value)):  
+        assert output.value[i] == math.log(b.value,p_array.value[i])
+        m  = 1/math.log(p_array.value[i])**2
+        ma = math.log(p_array.value[i])/b.value
+        mb = -math.log(b.value)/p_array.value[i]
+        assert output.derivatives['x'][i] == pytest.approx(m*ma*b.derivatives['x']+m*mb*p_array.derivatives['x'][i])
+        assert output.derivatives['y'][i] == pytest.approx(m*ma*b.derivatives['y']+m*mb*p_array.derivatives['y'][i])
         
-def test_log_mm(m_array,n_array):
-    output = ad.log(m_array,n_array)
+def test_log_mm(m_array,p_array):
+    output = ad.log(m_array,p_array)
     for i in range(len(m_array.value)):  
-        assert output.value[i] == math.log(m_array.value[i],n_array.value[i])
-        m  = 1/math.log(n_array.value[i])**2
-        ma = math.log(n_array.value[i])/m_array.value[i]
-        mb = -math.log(m_array.value[i])/n_array.value[i]
-        assert output.derivatives['x'][i] == pytest.approx(m*ma*m_array.derivatives['x'][i]+m*mb*n_array.derivatives['x'][i])
-        assert output.derivatives['y'][i] == pytest.approx(m*ma*m_array.derivatives['y'][i]+m*mb*n_array.derivatives['y'][i])
+        assert output.value[i] == math.log(m_array.value[i],p_array.value[i])
+        m  = 1/math.log(p_array.value[i])**2
+        ma = math.log(p_array.value[i])/m_array.value[i]
+        mb = -math.log(m_array.value[i])/p_array.value[i]
+        assert output.derivatives['x'][i] == pytest.approx(m*ma*m_array.derivatives['x'][i]+m*mb*p_array.derivatives['x'][i])
+        assert output.derivatives['y'][i] == pytest.approx(m*ma*m_array.derivatives['y'][i]+m*mb*p_array.derivatives['y'][i])

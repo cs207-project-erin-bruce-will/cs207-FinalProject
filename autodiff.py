@@ -1,10 +1,8 @@
 from collections import defaultdict
 import numbers
-import numpy
-import math
+import numpy as np
 import warnings
 
-# TODO: set the level of input checking in the fromdict method
 
 class DualNumber():
     """This class contains the functions that return dual numbers."""
@@ -40,17 +38,15 @@ class DualNumber():
                 raise TypeError("name for input must be a string (when value is a single number)")
             self.derivatives[name]=1
         
-        elif isinstance(value, numpy.ndarray):
+        elif isinstance(value, np.ndarray):
             self.value = value
-            self.derivatives = defaultdict(self.numpy_closure(value.shape))
-            #TODO: mode that accesses each element of name to set names
-            #TODO: checking that name doesn't include [] already?
-            position_list = numpy.unravel_index(range(value.size),value.shape)
+            self.derivatives = defaultdict(self.np_closure(value.shape))
+            position_list = np.unravel_index(range(value.size),value.shape)
             for cur_index in range(value.size):
                 
                 indices = [dim[cur_index] for dim in position_list]
                 
-                der = numpy.zeros(value.shape)
+                der = np.zeros(value.shape)
                 der[tuple(indices)] = 1
                 
                 extended_name = name+repr(indices)
@@ -61,12 +57,12 @@ class DualNumber():
     
                
     @staticmethod
-    def numpy_closure(shape):
+    def np_closure(shape):
         """
-        @staticmethod used to create a function that returns a numpy array of a given shape.
+        @staticmethod used to create a function that returns a np array of a given shape.
         """
         def inner_func():
-            return numpy.zeros(shape)
+            return np.zeros(shape)
         return inner_func
         
     @classmethod
@@ -82,9 +78,9 @@ class DualNumber():
         if isinstance(other,numbers.Number):
             output.value = other
             output.derivatives = defaultdict(float)
-        elif isinstance(other, numpy.ndarray):
+        elif isinstance(other, np.ndarray):
             output.value = other
-            output.derivatives = defaultdict(cls.numpy_closure(other.shape))
+            output.derivatives = defaultdict(cls.np_closure(other.shape))
         else:
             raise TypeError("Couldn't promote input of type {}".format(type(other)))
         return output
@@ -209,7 +205,7 @@ class DualNumber():
 
         # real part of first parent distributes
         for k2 in other.derivatives:
-            output.derivatives[k2] += (self.value**other.value)*math.log(self.value)*other.derivatives[k2]
+            output.derivatives[k2] += (self.value**other.value)*np.log(self.value)*other.derivatives[k2]
         
         # real part of the second parent distributes
         for k1 in self.derivatives:
@@ -229,7 +225,7 @@ class DualNumber():
         
         # real part of the second parent distributes
         for k1 in self.derivatives:
-            output.derivatives[k1] += (other.value**self.value)*math.log(other.value)*self.derivatives[k1]
+            output.derivatives[k1] += (other.value**self.value)*np.log(other.value)*self.derivatives[k1]
 
         return output
     
@@ -327,7 +323,7 @@ def exp(self): #natural exponential
     Raises DualNumber object to a specified value and returns a DualNumber object with updated value and derivatives.
     """
     
-    base = math.exp(1)
+    base = np.exp(1)
     output = base**self
 
     return output
@@ -336,7 +332,7 @@ def ln(self): #natural log
     """
     Takes the natural log of DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    output= self.promote(math.log(self.value))
+    output= self.promote(np.log(self.value))
         
     # real part of the second parent distributes
     for k1 in self.derivatives:
@@ -351,10 +347,10 @@ def log(x, base): #log_other(self) and other is base
     x = DualNumber.promote(x)
     base =  DualNumber.promote(base)
 
-    if x.value<=0: # out of domain
+    if np.any(x.value<=0): # out of domain
         raise Exception('The domain of logarithm function is any positive number.')
         
-    if base.value<=0: # base must be something positive
+    if np.any(base.value<=0): # base must be something positive
         raise Exception('The base of logarithm function is any positive number.')
         
     return ln(x)/ln(base)
@@ -364,11 +360,11 @@ def sin(self):
     Takes the sine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.promote(math.sin(self.value))
+    output = self.promote(np.sin(self.value))
         
     # real part of the first parent distributes
     for k1 in self.derivatives:
-        output.derivatives[k1] += math.cos(self.value)*self.derivatives[k1]
+        output.derivatives[k1] += np.cos(self.value)*self.derivatives[k1]
             
     return output
 
@@ -378,11 +374,11 @@ def cos(self):
     Takes the cosine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = self.promote(math.cos(self.value))
+    output = self.promote(np.cos(self.value))
         
     # real part of the first parent distributes
     for k1 in self.derivatives:
-        output.derivatives[k1] += -math.sin(self.value)*self.derivatives[k1]
+        output.derivatives[k1] += -np.sin(self.value)*self.derivatives[k1]
             
     return output
 
@@ -434,14 +430,14 @@ def arcsin(self): # must make sure self is strictly between -1 and 1, exclusive
     Note: .value will only fall between -1 and 1
     """
     self = DualNumber.promote(self)
-    if self.value<-1 or self.value>1: # out of domain
+    if np.any(self.value<-1) or np.any(self.value>1): # out of domain
         raise Exception('The value entering into arcsin function must be strictly within -1 and 1.')
 
-    output = self.promote(math.asin(self.value))
+    output = self.promote(np.arcsin(self.value))
         
     # real part of the first parent distributes
     for k1 in self.derivatives:
-        output.derivatives[k1] += 1/math.sqrt(1-self.value**2)*self.derivatives[k1]
+        output.derivatives[k1] += 1/np.sqrt(1-self.value**2)*self.derivatives[k1]
             
     return output
 
@@ -451,7 +447,7 @@ def arccos(self):
     Takes the inverse cosine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = math.pi/2 - arcsin(self)
+    output = np.pi/2 - arcsin(self)
         
     return output
 
@@ -471,7 +467,7 @@ def arccot(self):
     Takes the inverse cotangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = math.pi/2 - arctan(self)
+    output = np.pi/2 - arctan(self)
         
     return output
 
@@ -490,7 +486,7 @@ def arccsc(self):
     Takes the inverse cosecant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
     self = DualNumber.promote(self)
-    output = math.pi/2 - arcsec(self)
+    output = np.pi/2 - arcsec(self)
         
     return output
 
