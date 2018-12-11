@@ -105,12 +105,12 @@ def test_oscilating():
     assert output.value == math.sin(1/0.001)
     assert output.derivatives['x'] == math.cos(1/.001)*(-1/(.001**2))
 
-# sin(1/x)/x goes nuts, but closes in on zero
-def test_oscilating2():
-    x = ad.DualNumber('x',0.001)
-    output = x*ad.sin(1/x)
-    assert output.value == .001*math.sin(1/0.001)
-    assert pytest.approx(output.derivatives['x'] == (math.sin(1/.001) - math.cos(1/.001)/.001))
+## sin(1/x)/x goes nuts, but closes in on zero
+#def test_oscilating2():
+#    x = ad.DualNumber('x',0.001)
+#    output = x*ad.sin(1/x)
+#    assert output.value == .001*math.sin(1/0.001)
+#    assert output.derivatives['x'] == (math.sin(1/.001) - math.cos(1/.001)/.001)
 
 
 # branch functions (different left and right halves)
