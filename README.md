@@ -2,10 +2,10 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/cs207-project-erin-bruce-will/cs207-FinalProject/badge.svg)](https://coveralls.io/github/cs207-project-erin-bruce-will/cs207-FinalProject)
 
-Erin, Bruce, and Will
+# AutoDiff
 
-# Milestone 2 Update
-
+Developed by: Will Claybaugh, Bruce Xiong, Erin Williams
+Group #3, CS207 Fall 2018
 
 
 ## Introduction
