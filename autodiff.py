@@ -573,6 +573,9 @@ def dot(x, y):
     output = DualNumber.promote(np.dot(x.value, y.value))
     
     for k1 in x.derivatives:
-        output.derivatives[k1] += np.dot(x.derivatives[k1],y.derivatives[k1])
+        output.derivatives[k1] += np.dot(x.derivatives[k1], y.value)
+    
+    for k2 in y.derivatives:
+        output.derivatives[k2] += np.dot(x.value, y.derivatives[k2])
 
     return output
