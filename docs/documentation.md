@@ -108,7 +108,7 @@ To contribute a test, refer to the [pytest documentation](https://docs.pytest.or
 Note that some test files are extremely repetitive and generated via a script. Changes made to `unary_tests.py` will not persist. Edit `write_unary.py` instead. 
 
 #### Installation
-Autodiff can be installed via pip: ```pip install AutoDiff_group3"``` 
+Autodiff can be installed via pip: ```pip install "AutoDiff_group3"``` 
 
 If you prefer to download directly from GitHub, follow these instructions:
 1. clone or download autodiff from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject)
