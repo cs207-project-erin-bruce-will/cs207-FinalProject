@@ -1,3 +1,3 @@
 # __init__.py
 
-name = 'AutoDiff_group3"
+name = 'AutoDiff_group3'
