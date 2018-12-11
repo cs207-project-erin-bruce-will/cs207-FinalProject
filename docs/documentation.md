@@ -77,11 +77,12 @@ cs207-FinalProject/
 	*various hooks for pytest and travis*
 	docs/
 		Historic READMEs
+		documentation.md
 		demo.py (a runnable demonstration of autodiff)
+		images/ (images used in documentation)
 	tests/
 		*Various unit and integration tests*
-	images/
-		*Images used in README*
+	
 ```
 * Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path and import as normal.
 ```
