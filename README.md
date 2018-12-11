@@ -62,7 +62,7 @@ Click [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject
 
 ## Dependencies
 
-See the full list of dependencies [HERE] (https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/requirements.txt)
+See the full list of dependencies [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/requirements.txt)
 
 ### License
 
