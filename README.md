@@ -22,13 +22,51 @@ out.derivatives #{x: 1/3, y: -2/(3**2)}, the gradient of x/y at (2,3)
 ```
 Autodiff works for functions and expressions with any number of inputs. Just pass those functions DualNumbers instead of regular ints/floats (and upgrade any math module functions to their autodiff equvalents)
 
-## How to use autodiff
-
 #### Installation
 Autodiff is installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
 sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
 
 Autodiff will be available via pip soon.
+
+### Examples
+
+Using autodiff is very simple:
+```python
+import sys
+sys.path.insert(0, "C:/Users/erina/cs207-FinalProject/")
+import autodiff as ad
+
+def f(a,b):
+    return 3*a/b*ad.sin(a*b+2)
+
+out = f(ad.DualNumber('x',2),ad.DualNumber('y',3))
+
+print(out.value)
+1.978716
+
+print(out.derivatives['x'])
+0.116358
+
+print(out.derivatives['y'])
+-1.24157
+
+# get the value and derifative of f at a different point
+out = f(ad.DualNumber('x',0),ad.DualNumber('y',1))
+```
+
+A Python 3 notebook containing more in-depth examples and usage is available [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/Demo.ipynb)
+
+### Documentation
+
+Click [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/documentation.md) for full documentation.
+
+### Dependencies
+
+See the full list of dependencies [HERE] (https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/requirements.txt)
+
+### License
+
+
 
 #### Usage
 Using autodiff is very simple:
