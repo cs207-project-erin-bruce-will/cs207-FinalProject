@@ -42,16 +42,6 @@ def s2():
     return 3.1
 
 ###
-# Creation
-###
-def test_creation_arr():
-    x = ad.DualNumber('x',np.array([10,12]))
-    assert np.all(x.value == np.array([10,12]))
-    assert np.all(x.derivatives['x[0]'] == np.array([1,0]))
-    assert np.all(x.derivatives['x[1]'] == np.array([0,1]))
-
-
-###
 # Addition
 ###
 def test_add_ms(m_array,s):
@@ -249,9 +239,13 @@ def test_T(rect_array):
             assert output.value[i,j] == rect_array.value[j,i]
             assert output.derivatives['y'][i,j] == rect_array.derivatives['y'][j,i]
             assert output.derivatives['x'][i,j] == rect_array.derivatives['x'][j,i]
-              
-        
         
 ###
 # Dot product
 ###
+def test_dot(m_array,n_array):
+    output = ad.dot(m_array,n_array)
+    assert output.value == np.dot(m_array.value,n_array.value)
+    assert output.derivatives['y'] == np.dot(m_array.derivatives['y'],n_array.value) + np.dot(n_array.derivatives['y'],m_array.value)
+    assert output.derivatives['x'] == np.dot(m_array.derivatives['x'],n_array.value) + np.dot(n_array.derivatives['x'],m_array.value)
+    

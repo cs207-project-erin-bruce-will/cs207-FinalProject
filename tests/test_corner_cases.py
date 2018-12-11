@@ -127,3 +127,26 @@ def test_branch():
     x2 = ad.DualNumber('x',20)
     my_fun(x2)
 
+####
+# Math matches base
+####
+def test_n_by_zero():
+    x = ad.DualNumber('x',0)
+    with pytest.raises(ZeroDivisionError):
+        5/x
+
+def test_zero_pow_zero():
+    x = ad.DualNumber('x',0)
+    y = ad.DualNumber('y',0)
+    out = x**y
+    assert out.value == 0**0
+    assert math.isnan(out.derivatives['x'])
+    assert out.derivatives['y']== -float("inf")
+    
+#def test_n_pow_0():
+#    x = ad.DualNumber('x',0)
+#    y = 1/3
+#    out = y**x
+#    assert out.value == 1
+#    assert math.isnan(out.derivatives['x'])
+#    assert out.derivatives['y']== -float("inf")

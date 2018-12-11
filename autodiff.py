@@ -127,14 +127,13 @@ class DualNumber():
     
     def __rsub__(self, other):
         """Subtracts DualNumber object from a value or another DualNumber, and returns a new DualNumber object."""
+        # we know for a fact that self is a dual and other is not
         other = self.promote(other)
         
         output = self.promote(other.value - self.value)
         
         for k1 in self.derivatives:
             output.derivatives[k1] += -self.derivatives[k1]
-        for k2 in other.derivatives:
-            output.derivatives[k2] += other.derivatives[k2]
 
         return output         
     
@@ -174,13 +173,10 @@ class DualNumber():
     
     def __rtruediv__(self, other):
         """Divides DualNumber object by a value or another DualNumber, and returns a new DualNumber object."""
+        # we know for a fact that self is a dual and other is not
         other = self.promote(other)
         
         output = self.promote(other.value/self.value)
-
-        # real part of first parent distributes
-        for k2 in other.derivatives:
-            output.derivatives[k2] += self.value*other.derivatives[k2]/((self.value)**2)
         
         # real part of the second parent distributes
         for k1 in self.derivatives:
@@ -207,12 +203,21 @@ class DualNumber():
 
         # real part of first parent distributes
         for k2 in other.derivatives:
-            output.derivatives[k2] += (self.value**other.value)*np.log(self.value)*other.derivatives[k2]
-        
+            # here, we may take the log of a negative number
+            with np.errstate(invalid='ignore', divide='ignore'):
+                # we might take the log of a negative, getting a complex number. That is correctly
+                # returned as NaN from numpy, but we don't want a warning
+                # the value power is just raw math and happens above, so we don't handle it
+                
+                output.derivatives[k2] += (self.value**other.value)*np.log(self.value)*other.derivatives[k2]
+            
         # real part of the second parent distributes
         for k1 in self.derivatives:
-            output.derivatives[k1] += other.value*(self.value**(other.value-1))*self.derivatives[k1]
-            
+            try:
+                output.derivatives[k1] += other.value*(self.value**(other.value-1))*self.derivatives[k1]
+            except ZeroDivisionError:
+                # 0**(negative number) is infinity
+                output.derivatives[k1] += other.value*(float("inf"))*self.derivatives[k1]
         return output
     
     def __rpow__(self, other):
@@ -220,14 +225,11 @@ class DualNumber():
         other = self.promote(other)
         
         output = self.promote(other.value**self.value)
-
-        # real part of first parent distributes
-        for k2 in other.derivatives:
-            output.derivatives[k2] += self.value*(other.value**(self.value-1))*other.derivatives[k2]
         
         # real part of the second parent distributes
         for k1 in self.derivatives:
-            output.derivatives[k1] += (other.value**self.value)*np.log(other.value)*self.derivatives[k1]
+            with np.errstate(invalid='ignore', divide='ignore'):
+                output.derivatives[k1] += (other.value**self.value)*np.log(other.value)*self.derivatives[k1]
 
         return output
     
@@ -357,212 +359,212 @@ def log(x, base): #log_other(self) and other is base
         
     return ln(x)/ln(base)
 
-def sin(self):
+def sin(x):
     """
     Takes the sine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = self.promote(np.sin(self.value))
+    x = DualNumber.promote(x)
+    output = DualNumber.promote(np.sin(x.value))
         
     # real part of the first parent distributes
-    for k1 in self.derivatives:
-        output.derivatives[k1] += np.cos(self.value)*self.derivatives[k1]
+    for k1 in x.derivatives:
+        output.derivatives[k1] += np.cos(x.value)*x.derivatives[k1]
             
     return output
 
 
-def cos(self):
+def cos(x):
     """
     Takes the cosine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = self.promote(np.cos(self.value))
+    x = DualNumber.promote(x)
+    output = x.promote(np.cos(x.value))
         
     # real part of the first parent distributes
-    for k1 in self.derivatives:
-        output.derivatives[k1] += -np.sin(self.value)*self.derivatives[k1]
+    for k1 in x.derivatives:
+        output.derivatives[k1] += -np.sin(x.value)*x.derivatives[k1]
             
     return output
 
 
-def tan(self): #need to check 0 in denominator
+def tan(x): #need to check 0 in denominator
     """
     Takes the tangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = sin(self)/cos(self)
+    x = DualNumber.promote(x)
+    output = sin(x)/cos(x)
             
     return output
 
 
-def cot(self):
+def cot(x):
     """
     Takes the cotangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = cos(self)/sin(self)
+    x = DualNumber.promote(x)
+    output = cos(x)/sin(x)
             
     return output
 
 
-def sec(self):
+def sec(x):
     """
     Takes the secant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = 1/cos(self)
+    x = DualNumber.promote(x)
+    output = 1/cos(x)
             
     return output
 
 
-def csc(self):
+def csc(x):
     """
     Takes the cosecant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = 1/sin(self)
+    x = DualNumber.promote(x)
+    output = 1/sin(x)
             
     return output
 
 
-def arcsin(self): # must make sure self is strictly between -1 and 1, exclusive
+def arcsin(x): # must make sure x is strictly between -1 and 1, exclusive
     """
     Takes the inverse sine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     
     Note: .value will only fall between -1 and 1
     """
-    self = DualNumber.promote(self)
-    if np.any(self.value<-1) or np.any(self.value>1): # out of domain
+    x = DualNumber.promote(x)
+    if np.any(x.value<-1) or np.any(x.value>1): # out of domain
         raise Exception('The value entering into arcsin function must be strictly within -1 and 1.')
 
-    output = self.promote(np.arcsin(self.value))
+    output = x.promote(np.arcsin(x.value))
         
     # real part of the first parent distributes
-    for k1 in self.derivatives:
-        output.derivatives[k1] += 1/np.sqrt(1-self.value**2)*self.derivatives[k1]
+    for k1 in x.derivatives:
+        output.derivatives[k1] += 1/np.sqrt(1-x.value**2)*x.derivatives[k1]
             
     return output
 
 
-def arccos(self):
+def arccos(x):
     """
     Takes the inverse cosine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = np.pi/2 - arcsin(self)
+    x = DualNumber.promote(x)
+    output = np.pi/2 - arcsin(x)
         
     return output
 
 
-def arctan(self):
+def arctan(x):
     """
     Takes the inverse tangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = arcsin(self/sqrt(1+self**2))
+    x = DualNumber.promote(x)
+    output = arcsin(x/sqrt(1+x**2))
         
     return output
 
 
-def arccot(self):
+def arccot(x):
     """
     Takes the inverse cotangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = np.pi/2 - arctan(self)
+    x = DualNumber.promote(x)
+    output = np.pi/2 - arctan(x)
         
     return output
 
 
-def arcsec(self):
+def arcsec(x):
     """
     Takes the inverse secant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = arccos(1/self)
+    x = DualNumber.promote(x)
+    output = arccos(1/x)
         
     return output
 
-def arccsc(self):
+def arccsc(x):
     """
     Takes the inverse cosecant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = np.pi/2 - arcsec(self)
+    x = DualNumber.promote(x)
+    output = np.pi/2 - arcsec(x)
         
     return output
 
-def sinh(self):
+def sinh(x):
     """
     Takes the hyperbolic sine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = exp(self)/2 - exp(-self)/2
+    x = DualNumber.promote(x)
+    output = exp(x)/2 - exp(-x)/2
 
     return output
 
-def cosh(self):
+def cosh(x):
     """
     Takes the hyperbolic cosine of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = exp(self)/2 + exp(-self)/2
+    x = DualNumber.promote(x)
+    output = exp(x)/2 + exp(-x)/2
 
     return output
 
-def tanh(self):
+def tanh(x):
     """
     Takes the hyperbolic tangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = sinh(self)/cosh(self)
+    x = DualNumber.promote(x)
+    output = sinh(x)/cosh(x)
 
     return output
 
-def coth(self):
+def coth(x):
     """
     Takes the hyperbolic cotangent of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = cosh(self)/sinh(self)
+    x = DualNumber.promote(x)
+    output = cosh(x)/sinh(x)
 
     return output
 
-def sech(self):
+def sech(x):
     """
     Takes the hyperbolic secant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = 1/cosh(self)
+    x = DualNumber.promote(x)
+    output = 1/cosh(x)
 
     return output
 
-def csch(self):
+def csch(x):
     """
     Takes the hyperbolic cosecant of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = 1/sinh(self)
+    x = DualNumber.promote(x)
+    output = 1/sinh(x)
 
     return output
 
-def logistic(self):
+def logistic(x):
     """
     Takes the logistic of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    self = DualNumber.promote(self)
-    output = exp(self)/(exp(self)+1)
+    x = DualNumber.promote(x)
+    output = exp(x)/(exp(x)+1)
 
     return output
 
-def T(self):
+def T(x):
     """
     Takes the transpose of a DualNumber object and returns a DualNumber object with updated value and derivatives.
     """
-    output = self.promote(np.transpose(self.value))
+    output = x.promote(np.transpose(x.value))
     
-    for k1 in self.derivatives:
-        output.derivatives[k1] += np.transpose(self.derivatives[k1])
+    for k1 in x.derivatives:
+        output.derivatives[k1] += np.transpose(x.derivatives[k1])
 
     return output
 
