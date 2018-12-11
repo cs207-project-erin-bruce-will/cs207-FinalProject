@@ -110,7 +110,7 @@ def test_oscilating2():
     x = ad.DualNumber('x',0.001)
     output = x*ad.sin(1/x)
     assert output.value == .001*math.sin(1/0.001)
-    assert pytest.approx(output.derivatives['x'] == math.sin(1/.001) - math.cos(1/.001)/.001)
+    assert pytest.approx(output.derivatives['x'] == (math.sin(1/.001) - math.cos(1/.001)/.001))
 
 
 # branch functions (different left and right halves)
@@ -142,11 +142,3 @@ def test_zero_pow_zero():
     assert out.value == 0**0
     assert math.isnan(out.derivatives['x'])
     assert out.derivatives['y']== -float("inf")
-    
-#def test_n_pow_0():
-#    x = ad.DualNumber('x',0)
-#    y = 1/3
-#    out = y**x
-#    assert out.value == 1
-#    assert math.isnan(out.derivatives['x'])
-#    assert out.derivatives['y']== -float("inf")
