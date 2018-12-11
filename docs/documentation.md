@@ -25,7 +25,7 @@ Autodiff works for functions and expressions with any number of inputs. Just pas
 Autodiff is installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
 sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
 
-Autodiff will be available via pip soon.
+Autodiff is pip installable. Use ```pip install "AutoDiff_group3" ``` to retrieve it from PyPi.
 
 #### Usage
 Using autodiff is very simple:
@@ -71,20 +71,21 @@ Autodiff is organized as follows:
 
 ```
 cs207-FinalProject/
-	README.md (The current user's guide)
+	README.md 
 	__init.py__
-	Requirements.txt
+	requirements.txt
 	autodiff.py (The key class and functions)
 	*various hooks for pytest and travis*
 	docs/
 		Historic READMEs
-		demo.py (a runnable demonstration of autodiff)
+		Demo.ipynb (a runnable demonstration of autodiff)
+		documentation
+		images/
+			*Images used in documentation*
 	tests/
 		*Various unit and integration tests*
-	images/
-		*Images used in README*
 ```
-* Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path and import as normal.
+* Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject) or through PyPi using ```pip install "AutoDiff_group3"```. Becuase it has no dependencies, you can simply add the repo folder to your python path and import as normal.
 ```
 import sys
 sys.path.insert(0, '/path_to_repo/')
@@ -107,9 +108,9 @@ To contribute a test, refer to the [pytest documentation](https://docs.pytest.or
 Note that some test files are extremely repetitive and generated via a script. Changes made to `unary_tests.py` will not persist. Edit `write_unary.py` instead. 
 
 #### Installation
-Support for installation via `pip` is coming soon. 
+Autodiff can be installed via pip: ```pip install AutoDiff_group3"``` 
 
-In the meantime, follow the steps below:
+If you prefer to download directly from GitHub, follow these instructions:
 1. clone or download autodiff from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject)
 2. in python files where you want to use autodiff, include the code 
 ```
@@ -127,6 +128,10 @@ The autodiff package is dead simple: there is a single module (`autodiff`) and a
 Any `DualNumber` has two components: a value and a dictionary of derivatives. The value is the real-number result of whatever computation returned this dual number. The derivatives are a dictionary mapping variable names to real numbers, for instance `{'x':3, 'y':0.2}`. This would mean that the computation that produced this dual number depends on original inputs named x and y (and no others) and the derivative in the x direction is 3, while the derivative in the y direction is 1/5. Importantly, dual numbers don't care how they were produced, and can be the result of arbitrarially complex user-defined functions. In fact, (soon) any function that is written in pure python can simply be called on `DualNumber` inputs to get the derivatives at those input values.
 
 Dual numbers work by simply updating the present derivatives in each direction at the same time a new value is computed. For example, the product rule: $\nabla xy = x\nabla y + y\nabla x$ says "to make the output's derivatives: take the derivatives stored in y and multiply them by x's value, then add the derivatives stored in x multiplied by y's value".
+
+Autodiff supports creation and basic manipulation of numpy arrays. It allows the user to substitute a numpy array for a single value, and will return derivatives at each position within the array. Currently, Autodiff support the dot product function and transpose function for numpy arrays.
+
+In the event results are unstable -- that is, close to a branch -- Autodiff will continue to function, but return a warning so the user is aware of the potential issue.
   
 #### "autodiff" Class Methods:
 - We overload common operators such as `__add__`, `__sub__`, `__mul__`, and `__truediv__` and their commutative pairs `__radd__`, `__rsub__`, `__rmul__`, and `__rtruediv__`.
@@ -157,12 +162,8 @@ Dual numbers work by simply updating the present derivatives in each direction a
 
 ## Extensions
 The following are coming to autodiff very soon.
- - support comparison operators like > and <
- - one-line code for the jacobian or gradient, e.g. `J = ad.jacobian(f,g,h, x=DualNumber('x',3),y=DualNumber('y',5.5)` returning the matrix of `[df/dx, df/dy; dg/dx, dg/dy; dh/dx, dh/dy]`
- - Support for `DualNumber('x', np.ones(20))`, where a single variable can refer to an array of values
- - Streamline functions like ad.sin() to return a scalar when given scalar input, so that autodiff-upgraded functions can be used seamlessly with scalar inputs
- - Simplify internal handling of rsub, rpow and others
- - Verify that our choice of branch in inverse trig functions matches `math` and `numpy`
- - Add default arguments to log and exp
- - Support non-differentiable functions like absolute value
- - GUI interface for a better client visual experience
+ - more robust support for Numpy arrays, giving the user the ability take an inverse of an array, subset arrays, etc.
+ - better integration with basic Python functions, ie ad.Range() to be used where range() would be used
+ - creation of a list object ie. as.list()
+
+
