@@ -22,13 +22,13 @@ out.derivatives #{x: 1/3, y: -2/(3**2)}, the gradient of x/y at (2,3)
 ```
 Autodiff works for functions and expressions with any number of inputs. Just pass those functions DualNumbers instead of regular ints/floats (and upgrade any math module functions to their autodiff equvalents)
 
-#### Installation
+## Installation
 Autodiff is installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
 sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
 
 Autodiff will be available via pip soon.
 
-### Examples
+## Examples
 
 Using autodiff is very simple:
 ```python
@@ -56,17 +56,17 @@ out = f(ad.DualNumber('x',0),ad.DualNumber('y',1))
 
 A Python 3 notebook containing more in-depth examples and usage is available [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/Demo.ipynb)
 
-### Documentation
+## Documentation
 
 Click [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/documentation.md) for full documentation.
 
-### Dependencies
+## Dependencies
 
 See the full list of dependencies [HERE] (https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/requirements.txt)
 
 ### License
 
-
+Click 
 
 #### Usage
 Using autodiff is very simple:
