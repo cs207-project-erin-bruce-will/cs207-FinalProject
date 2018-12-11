@@ -60,7 +60,7 @@ Dual numbers extend real numbers to include an infinitessemal component to repre
 
 The accurate, easy derivative information can be very useful in optimixation routines, such as Newton's method, or the stochastic gradient descent used to train neural networks.
 
-A dual number can be written symbolically like $7+0$, $3 +1\epsilon_x $ (the examples above), or include more directional derivatives: $-5.5 + 2\epsilon_x + 4\epsilon_y ...$. This last result might come from math or code combining a dual number named x and a dual number named y.
+A dual number can be written symbolically like ![Image8](images/EQ8.JPG "Eq8") (the examples above), or include more directional derivatives: ![Image9](images/EQ9.JPG "Eq9"). This last result might come from math or code combining a dual number named x and a dual number named y.
 
 When dual numbers add, subtract, divide, multiply, and more, the epsilons combine and distribute, but with the rule that the product of any two espilons is exactly 0 and disappears from the computation.
 
@@ -127,7 +127,7 @@ The autodiff package is dead simple: there is a single module (`autodiff`) and a
 
 Any `DualNumber` has two components: a value and a dictionary of derivatives. The value is the real-number result of whatever computation returned this dual number. The derivatives are a dictionary mapping variable names to real numbers, for instance `{'x':3, 'y':0.2}`. This would mean that the computation that produced this dual number depends on original inputs named x and y (and no others) and the derivative in the x direction is 3, while the derivative in the y direction is 1/5. Importantly, dual numbers don't care how they were produced, and can be the result of arbitrarially complex user-defined functions. In fact, (soon) any function that is written in pure python can simply be called on `DualNumber` inputs to get the derivatives at those input values.
 
-Dual numbers work by simply updating the present derivatives in each direction at the same time a new value is computed. For example, the product rule: $\nabla xy = x\nabla y + y\nabla x$ says "to make the output's derivatives: take the derivatives stored in y and multiply them by x's value, then add the derivatives stored in x multiplied by y's value".
+Dual numbers work by simply updating the present derivatives in each direction at the same time a new value is computed. For example, the product rule: ![Image10](images/EQ10.JPG "Eq10") says "to make the output's derivatives: take the derivatives stored in y and multiply them by x's value, then add the derivatives stored in x multiplied by y's value".
 
 Autodiff supports creation and basic manipulation of numpy arrays. It allows the user to substitute a numpy array for a single value, and will return derivatives at each position within the array. Currently, Autodiff support the dot product function and transpose function for numpy arrays.
 
