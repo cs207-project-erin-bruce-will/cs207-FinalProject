@@ -142,7 +142,7 @@ In the event results are unstable -- that is, close to a branch -- Autodiff will
 - We also overload `__pow__` and `__rpow__`. We implement them as the general form below:
     ![Image2](images/Equation2.JPG "Equation2")
 
-    - Therefore when we implement the derivatives, including the very special case such as $y=x^x$, the following chain rule applies:
+    - Therefore when we implement the derivatives, including the very special case such as ```y=x**2```, the following chain rule applies:
     ![Image3](images/Equation3.JPG "Equation3")	
     - The above basically covers most of the powers/ roots/ exponential functions, such as:
     	![Image4](images/Equation4.JPG "Eq4")
@@ -150,7 +150,7 @@ In the event results are unstable -- that is, close to a branch -- Autodiff will
 #### Elementary Functions Implementation Details:
 - General form of logarithm function:
 	![Image5](images/Equation5.JPG "Eq5")
-    - We first implement a special case $y=\ln(x)$, the logarithm function with natural base: ![Image6](images/Equation6.JPG "Eq6")
+    - We first implement a special case of the logarithm function with natural base: ![Image6](images/Equation6.JPG "Eq6")
     - Then ![Image7](images/Equation7.JPG "Eq7")
     - To get the derivatives, we just apply division rule.
     - We set up checks for domains of both base and exponent: both must be strictly positive to be meaningful.
