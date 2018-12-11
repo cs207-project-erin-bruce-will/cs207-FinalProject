@@ -64,7 +64,7 @@ Click [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject
 
 Click [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/docs/requirements.txt) for a full listing of dependencies.
 
-### License
+## License
 
 Click [HERE](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject/blob/master/LICENSE) to view our MIT License.
 
