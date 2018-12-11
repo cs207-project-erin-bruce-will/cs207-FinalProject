@@ -4,7 +4,7 @@
 
 # AutoDiff
 
-Developed by: Will Claybaugh, Bruce Xiong, Erin Williams
+Developed by: Will Claybaugh, Bruce Xiong, Erin Williams  
 Group #3, CS207 Fall 2018
 
 
