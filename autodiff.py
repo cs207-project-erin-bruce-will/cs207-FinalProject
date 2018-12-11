@@ -51,7 +51,7 @@ class DualNumber():
                 der = np.zeros(value.shape)
                 der[tuple(indices)] = 1
                 
-                extended_name = name+repr(indices)
+                extended_name = name+repr(indices).repalce(" ","")
                 
                 self.derivatives[extended_name] = der
         else:
