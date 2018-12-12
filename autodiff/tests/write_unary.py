@@ -139,7 +139,7 @@ def test_{0}_dm(dm{3}):
     
 """
 
-with open("tests/test_unary_functions.py",'w') as outfile:
+with open("./tests/test_unary_functions.py",'w') as outfile:
     outfile.write(preamble)
     outfile.write(negation_test)
     for cur_tup in test_tuples:
