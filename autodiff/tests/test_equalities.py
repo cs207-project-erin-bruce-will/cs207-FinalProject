@@ -1,5 +1,5 @@
 import pytest
-import autodiff as ad
+import autodiff.autodiff as ad
 
 ###
 # Equality ==

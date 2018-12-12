@@ -1,17 +1,15 @@
 import pytest
-import autodiff as ad
+import autodiff.autodiff as ad
 import math
 
 @pytest.fixture
 def a():
-    from autodiff import DualNumber
-    a = DualNumber._from_dict(3.5,{'y':4,'x':3})
+    a = ad.DualNumber._from_dict(3.5,{'y':4,'x':3})
     return a
 
 @pytest.fixture
 def b():
-    from autodiff import DualNumber
-    b = DualNumber._from_dict(2,{'x':1.2, 'y':9.5, 'z':5})
+    b = ad.DualNumber._from_dict(2,{'x':1.2, 'y':9.5, 'z':5})
     return b
 
 @pytest.fixture

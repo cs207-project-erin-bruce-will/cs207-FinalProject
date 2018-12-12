@@ -1,36 +1,31 @@
 import pytest
-import autodiff as ad
+import autodiff.autodiff as ad
 import numpy as np
 import math
 
 @pytest.fixture
 def m_array():
-    from autodiff import DualNumber
-    m = DualNumber._from_dict(np.array([3,2,1]),{'y':np.array([4,-5,6]),'x':np.array([8,7,-9])})
+    m = ad.DualNumber._from_dict(np.array([3,2,1]),{'y':np.array([4,-5,6]),'x':np.array([8,7,-9])})
     return m
 
 @pytest.fixture
 def n_array():
-    from autodiff import DualNumber
-    n = DualNumber._from_dict(np.array([-2,3,6]),{'y':np.array([4,-5,1]),'x':np.array([-1,3,-9])})
+    n = ad.DualNumber._from_dict(np.array([-2,3,6]),{'y':np.array([4,-5,1]),'x':np.array([-1,3,-9])})
     return n
 
 @pytest.fixture
 def p_array():
-    from autodiff import DualNumber
-    n = DualNumber._from_dict(np.array([2,3,6]),{'y':np.array([4,-5,1]),'x':np.array([-1,3,-9])})
+    n = ad.DualNumber._from_dict(np.array([2,3,6]),{'y':np.array([4,-5,1]),'x':np.array([-1,3,-9])})
     return n
 
 @pytest.fixture
 def rect_array():
-    from autodiff import DualNumber
-    rect_array = DualNumber._from_dict(np.array([[3,2,1],[6,2,2]]),{'y':np.array([[4,-5,6],[0,0,2]]),'x':np.array([[8,7,-9],[3,2,5]])})
+    rect_array = ad.DualNumber._from_dict(np.array([[3,2,1],[6,2,2]]),{'y':np.array([[4,-5,6],[0,0,2]]),'x':np.array([[8,7,-9],[3,2,5]])})
     return rect_array
 
 @pytest.fixture
 def b():
-    from autodiff import DualNumber
-    b = DualNumber._from_dict(2,{'x':1.2, 'y':9.5, 'z':5})
+    b = ad.DualNumber._from_dict(2,{'x':1.2, 'y':9.5, 'z':5})
     return b
 
 @pytest.fixture

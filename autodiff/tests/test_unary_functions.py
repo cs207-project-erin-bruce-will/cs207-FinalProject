@@ -1,18 +1,16 @@
 import pytest
-import autodiff as ad
+import autodiff.autodiff as ad
 import math
 import numpy as np
 
 @pytest.fixture
 def b():
-    from autodiff import DualNumber
-    b = DualNumber._from_dict(-2/3,{'x':1.2, 'y':9.5, 'z':5})
+    b = ad.DualNumber._from_dict(-2/3,{'x':1.2, 'y':9.5, 'z':5})
     return b
     
 @pytest.fixture
 def binv():
-    from autodiff import DualNumber
-    binv = DualNumber._from_dict(-3/2,{'x':1.2, 'y':9.5, 'z':5})
+    binv = ad.DualNumber._from_dict(-3/2,{'x':1.2, 'y':9.5, 'z':5})
     return binv
 
 @pytest.fixture
@@ -35,14 +33,12 @@ def minv():
     
 @pytest.fixture
 def dm():
-    from autodiff import DualNumber
-    dm = DualNumber._from_dict(np.array([1/6,2/6,3/6]),{'y':np.array([4,-5,6]),'x':np.array([8,7,-9])})
+    dm = ad.DualNumber._from_dict(np.array([1/6,2/6,3/6]),{'y':np.array([4,-5,6]),'x':np.array([8,7,-9])})
     return dm
     
 @pytest.fixture
 def dminv():
-    from autodiff import DualNumber
-    dminv = DualNumber._from_dict(1/np.array([1/6,2/6,3/6]),{'y':np.array([4,-5,6]),'x':np.array([8,7,-9])})
+    dminv = ad.DualNumber._from_dict(1/np.array([1/6,2/6,3/6]),{'y':np.array([4,-5,6]),'x':np.array([8,7,-9])})
     return dminv
 
 ###

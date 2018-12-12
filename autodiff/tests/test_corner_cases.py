@@ -1,7 +1,7 @@
 ###
 # Creation
 ###
-import autodiff as ad
+import autodiff.autodiff as ad
 import numpy as np
 import math
 import pytest

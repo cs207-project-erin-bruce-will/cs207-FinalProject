@@ -1,5 +1,5 @@
 import pytest
-import autodiff as ad
+import autodiff.autodiff as ad
 import math
 
 #TODO: test things like x**(-1) == 1/x
@@ -7,13 +7,11 @@ import math
 
 @pytest.fixture
 def x():
-	from autodiff import DualNumber
-	return DualNumber('x',2)
+	return ad.DualNumber('x',2)
 
 @pytest.fixture
 def y():
-	from autodiff import DualNumber
-	y = DualNumber('y',3.5)
+	y = ad.DualNumber('y',3.5)
 	return y
 
 	
