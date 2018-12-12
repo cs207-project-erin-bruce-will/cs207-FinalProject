@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject",
-    packages=setuptools.find_packages(),
+    packages=['autodiff'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
