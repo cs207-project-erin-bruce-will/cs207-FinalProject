@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="AutoDiff_group3",
-    version="0.0.4",
+    version="0.0.5",
     author="Will Claybaugh, Fan (Bruce) Xiong, Erin Williams",
     author_email="erinwilliams@g.harvard.edu",
     description="Automatic differentiation with dual numbers",
