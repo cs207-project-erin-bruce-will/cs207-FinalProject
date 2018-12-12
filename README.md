@@ -11,7 +11,7 @@ Group #3, CS207 Fall 2018
 ## Introduction
 Autodiff finds the derivatives of a function (to machine precision!) at the same time it finds the value of the function.
 ```
-import autodiff as ad
+import autodiff.autodiff as ad
 
 x = ad.DualNumber('x', 2)
 y = ad.DualNumber('y', 3)
@@ -23,7 +23,7 @@ out.derivatives #{x: 1/3, y: -2/(3**2)}, the gradient of x/y at (2,3)
 Autodiff works for functions and expressions with any number of inputs. Just pass those functions DualNumbers instead of regular ints/floats (and upgrade any math module functions to their autodiff equvalents)
 
 ## Installation
-Autodiff can be installed using ```pip install AutoDiff-group3```.
+Autodiff is on [PyPi](https://pypi.org/project/AutoDiff-group3/) and can be installed using the command ```pip install AutoDiff-group3```. To import, use ```import autodiff.autodiff as ad```.
 
 Autodiff can also be installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
 sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
@@ -31,10 +31,8 @@ sys.path.insert(0, '/path_to_repo/')```) and import as normal.
 ## Examples
 
 Using autodiff is very simple:
-```python
-import sys
-sys.path.insert(0, "C:/Users/erina/cs207-FinalProject/")
-import autodiff as ad
+```
+import autodiff.autodiff as ad
 
 def f(a,b):
     return 3*a/b*ad.sin(a*b+2)
