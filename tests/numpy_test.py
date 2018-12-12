@@ -41,6 +41,17 @@ def s():
 def s2():
     return 3.1
 
+
+###
+# formation
+###
+def test_array():
+    will = [[ad.DualNumber('x',x) for x in range(5)],[ad.DualNumber('y',2*x) for x in range(5)]]
+    dave = ad.array(will)
+    assert np.all(dave.value == np.array([[x for x in range(5)],[2*x for x in range(5)]]))
+    assert np.all(dave.derivatives['x'] == np.array([[1 for x in range(5)],[0 for x in range(5)]]))
+    assert np.all(dave.derivatives['y'] == np.array([[0 for x in range(5)],[1 for x in range(5)]]))
+    
 ###
 # Addition
 ###

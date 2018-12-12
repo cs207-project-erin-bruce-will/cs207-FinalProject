@@ -308,6 +308,34 @@ class DualNumber():
                 warnings.warn("Computation is close to a branch. Derivatives may not be accurate.")
             return self.value > other
         
+def array(iterable):
+    def recursive_values(x,deriv=None):
+        if isinstance(x,list):
+            return [recursive_values(el,deriv) for el in x]
+        elif isinstance(x,DualNumber):
+            if deriv:
+                return x.derivatives[deriv]
+            else:
+                return x.value
+        else:
+            raise TypeError("The input must be a numpy-compatible list of dual numbers")
+            
+    def recursive_keys(x,output):
+        if isinstance(x,list):
+            [recursive_keys(el,output) for el in x]
+        elif isinstance(x,DualNumber):
+            [output.add(key) for key in x.derivatives.keys()]
+        else:
+            raise TypeError("The input must be a numpy-compatible list of dual numbers")
+    
+    output = DualNumber.promote(np.array(recursive_values(iterable)))
+    
+    all_derivs = set()
+    recursive_keys(iterable,all_derivs)
+    for cur_deriv in all_derivs:
+        output.derivatives[cur_deriv] = np.array(recursive_values(iterable,cur_deriv))
+    
+    return output
 
 ####
 # End of DualNumber class; start of module's functions
