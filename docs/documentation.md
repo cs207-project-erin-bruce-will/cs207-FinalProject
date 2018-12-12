@@ -8,7 +8,7 @@ Group #3, CS207 Fall 2018
 ## Introduction
 Autodiff finds the derivatives of a function (to machine precision!) at the same time it finds the value of the function.
 ```
-import autodiff as ad
+import autodiff.autodiff as ad
 
 x = ad.DualNumber('x', 2)
 y = ad.DualNumber('y', 3)
@@ -22,17 +22,15 @@ Autodiff works for functions and expressions with any number of inputs. Just pas
 ## How to use autodiff
 
 #### Installation
-Autodiff is installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
-sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
+**Preferred method**: Autodiff is available on [PyPi](https://pypi.org/project/AutoDiff-group3/) and is pip installable. Use the command ```pip install AutoDiff-group3``` to install. It can easily be imported using ```import autodiff.autodiff as ad```.
 
-Autodiff is pip installable. Use ```pip install "AutoDiff_group3" ``` to retrieve it from PyPi.
+Autodiff can also be installed installed by downloading from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject). Becuase it has no dependencies, you can simply add the repo folder to your python path (```import sys
+sys.path.insert(0, '/path_to_repo/')```) and import as normal. 
 
 #### Usage
 Using autodiff is very simple:
-```python
-import sys
-sys.path.insert(0, "C:/Users/erina/cs207-FinalProject/")
-import autodiff as ad
+```
+import autodiff.autodiff as ad
 
 def f(a,b):
     return 3*a/b*ad.sin(a*b+2)
@@ -72,23 +70,22 @@ Autodiff is organized as follows:
 ```
 cs207-FinalProject/
 	README.md 
-	__init.py__
 	requirements.txt
-	autodiff.py (The key class and functions)
+	LICENSE
+	setup.py
+	setup.cfg
 	*various hooks for pytest and travis*
+	autodiff/
+		autodiff.py
+		__init__.py
+		tests/
+			*Various unit and integration tests*
 	docs/
 		Historic READMEs
 		Demo.ipynb (a runnable demonstration of autodiff)
 		documentation
 		images/
 			*Images used in documentation*
-	tests/
-		*Various unit and integration tests*
-```
-* Currently, you can install our package from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject) or through PyPi using ```pip install "AutoDiff_group3"```. Becuase it has no dependencies, you can simply add the repo folder to your python path and import as normal.
-```
-import sys
-sys.path.insert(0, '/path_to_repo/')
 ```
 
 #### Modules
@@ -106,20 +103,6 @@ You can run an individual set of tests via `py.test tests\filename`, for example
 To contribute a test, refer to the [pytest documentation](https://docs.pytest.org/en/latest/contents.html) for instructions on how to structure the test.
 
 Note that some test files are extremely repetitive and generated via a script. Changes made to `unary_tests.py` will not persist. Edit `write_unary.py` instead. 
-
-#### Installation
-Autodiff can be installed via pip: ```pip install "AutoDiff_group3"``` 
-
-If you prefer to download directly from GitHub, follow these instructions:
-1. clone or download autodiff from [github](https://github.com/cs207-project-erin-bruce-will/cs207-FinalProject)
-2. in python files where you want to use autodiff, include the code 
-```
-import sys
-sys.path.insert(0, '/path_to_autodiff/')
-import autodiff as ad
-```
-
-That's it! Note that editing sys.path is undone when you close python so removing autodiff from your system just requires you to delete the autodiff folder. However, you must write carefully if you want your code to be portable: a user may not have autodiff's repo saved under the same path as you do.
 
 	  
 ## Implementation details
